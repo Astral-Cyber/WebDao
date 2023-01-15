@@ -1,6 +1,6 @@
 <template>
   <el-row style="height: 24px" justify="space-between" align="middle">
-    <el-col :span="3">
+    <el-col :span="7">
       <span class="back" @click="back">
       ⬅ 藏典阁
     </span>
@@ -8,7 +8,7 @@
     <el-col :span="10" style="text-align: center">
       <span style="font-weight: bolder;color: #666666;font-size: x-large;">{{article.topic}}</span>
     </el-col>
-    <el-col :span="3">
+    <el-col :span="7">
     </el-col>
   </el-row>
   <el-divider id="divider" border-style="dashed" content-position="left"/>

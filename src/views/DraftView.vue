@@ -27,7 +27,7 @@
   </el-dialog>
 
   <el-row style="height: 24px" justify="space-between" align="middle">
-    <el-col :span="3">
+    <el-col :span="6">
       <span class="back" @click="back">
       ⬅ 藏典阁
     </span>
@@ -35,7 +35,7 @@
     <el-col :span="10" style="text-align: center">
       <span style="font-weight: bolder;color: #666666;font-size:x-large;">{{globalProperties.$userInfo.value.username }}的草稿箱</span>
     </el-col>
-    <el-col :span="3" style="text-align: right">
+    <el-col :span="6" style="text-align: right">
       <span @click="back" style="cursor:pointer; font-weight: bolder;color: #989898;font-size: larger;">施工中</span>
     </el-col>
   </el-row>

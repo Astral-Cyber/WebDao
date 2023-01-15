@@ -40,14 +40,14 @@
         <el-row justify="center" align="middle" class="userLine">
           <el-button @click="router.push({
              name:'Author'
-          })" style="font-size: large" type="success" link>已发布: {{ globalProperties.$userInfo.value.articles }}
+          })" style="font-size: 1.3vw" type="success" link>已发布: {{ globalProperties.$userInfo.value.articles }}
           </el-button>
-          &#12288;
+
           <el-divider direction="vertical" border-style="dashed"/>
-          &#12288;
+
           <el-button @click="router.push({
              name:'Draft'
-          })" style="font-size: large" type="warning" link>草稿箱: {{ globalProperties.$userInfo.value.draft }}
+          })" style="font-size: 1.3vw" type="warning" link>草稿箱: {{ globalProperties.$userInfo.value.draft }}
           </el-button>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
