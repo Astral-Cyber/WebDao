@@ -1,4 +1,4 @@
-name: Build
+name: Deploy page
 
 on:
   push:
@@ -7,28 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v3.4.1
-      with:
-        node-version: 16.x
-    
-    - name: Build
-      run: |
-        yarn install
-        yarn run build
-        cp dist/index.html dist/404.html
-      
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: build
-        publish_dir: ./dist
-        cname: blogdao.astralcyber.ml
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+
+
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          yarn install
+          yarn run build
+          cp dist/index.html dist/404.html
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: dist # The folder the action should deploy.
+          cname: blogdao.astralcyber.ml
