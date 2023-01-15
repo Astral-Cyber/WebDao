@@ -89,11 +89,17 @@ body {
     background-attachment: fixed;
 }
 
-#sakana-widget{
+#sakana-widget {
     width: 120px;
     position: fixed;
     bottom: 0px;
     right: -4px;
+}
+
+@media screen and (max-width: 900px) {
+    .side {
+        display: none;
+    }
 }
 
 @media (prefers-color-scheme: light) {
@@ -145,4 +151,15 @@ body {
 .el-tabs__item {
     padding: 0px !important;
     margin-left: 20px !important;
+}
+
+.back {
+    cursor: pointer;
+    font-weight: bolder;
+    color: #E57B89;
+    font-size: larger;
+    transition: color 0.5s ease;
+}
+.back:hover {
+    color: #f59ca7;
 }

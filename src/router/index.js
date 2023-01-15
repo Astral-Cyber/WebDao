@@ -9,19 +9,34 @@ const router = createRouter({
             component: () => import('../views/MainView.vue')
         },
         {
-            path: '/:id',
+            path: '/:page',
             name: 'Page',
             component: () => import('../views/MainView.vue')
         },
         {
             path: '/article/:articleId',
-            name: 'article',
+            name: 'Article',
             component: () => import('../views/ArticleView.vue')
         },
         {
-            path: '/author',
-            name: 'author',
+            path: '/author/:page',
+            name: 'AuthorPage',
             component: () => import('../views/AuthorView.vue')
+        },
+        {
+            path: '/author',
+            name: 'Author',
+            component: () => import('../views/AuthorView.vue')
+        },
+        {
+            path: '/draft/:page',
+            name: 'DraftPage',
+            component: () => import('../views/DraftView.vue')
+        },
+        {
+            path: '/draft',
+            name: 'Draft',
+            component: () => import('../views/DraftView.vue')
         },
     ]
 })

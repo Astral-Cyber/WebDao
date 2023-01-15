@@ -38,7 +38,17 @@
           <span id="intro">{{ globalProperties.$userInfo.value.intro }}</span>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
-          <el-button>个人主页</el-button>
+          <el-button @click="router.push({
+             name:'Author'
+          })" style="font-size: large" type="success" link>已发布: {{ globalProperties.$userInfo.value.articles }}
+          </el-button>
+          &#12288;
+          <el-divider direction="vertical" border-style="dashed"/>
+          &#12288;
+          <el-button @click="router.push({
+             name:'Draft'
+          })" style="font-size: large" type="warning" link>草稿箱: {{ globalProperties.$userInfo.value.draft }}
+          </el-button>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
           <a :href="'https://api.liitk.com/s/qrcode/api?text='+globalProperties.$userInfo.value.qq+'&size=300px'">
@@ -67,60 +77,103 @@
 
 
       <el-tab-pane class="ele" label="ABOUT" name="second">
-        <div id="changeInfo">
-          <el-avatar style="width: 4vw;
-                          height: 4vw;
-                          position: absolute;
-                          top: 0px;
-                          left: 23%;
-                          transform: translate(-50%);"
-                     :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"
-          />
-          <span style="height: 4vw;
-                       position: absolute;
-                       left: 38%;
-                       font-size: 1.2vw;
-                       top:1vw;"
-          >Change Yourself</span>
-          <div style="margin-top: 3.1vw">
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.username" clearable maxlength="8" show-word-limit>
-                <template style="width: min-content" #prepend>昵称</template>
-              </el-input>
-            </el-row>
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.intro" clearable>
-                <template style="width: min-content" #prepend>简介</template>
-              </el-input>
-            </el-row>
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.qq" clearable>
-                <template style="width: min-content" #prepend>QQ</template>
-              </el-input>
-            </el-row>
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.music" clearable>
-                <template style="width: min-content" #prepend>Music</template>
-              </el-input>
-            </el-row>
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.github" clearable>
-                <template style="width: min-content" #prepend>Github</template>
-              </el-input>
-            </el-row>
-            <el-row class="about">
-              <el-input v-model="globalProperties.$userInfo.value.telegram" clearable>
-                <template style="width: min-content" #prepend>Telegram</template>
-              </el-input>
-            </el-row>
-          </div>
-        </div>
-        <el-divider style="margin:12px 0px !important;"/>
+        <el-avatar id="photo"
+                   :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"
+        />
+        <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
+
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.username" clearable maxlength="8" show-word-limit>
+            <template style="width: min-content" #prepend>昵称</template>
+          </el-input>
+        </el-row>
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.intro" clearable>
+            <template style="width: min-content" #prepend>简介</template>
+          </el-input>
+        </el-row>
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.qq" clearable>
+            <template style="width: min-content" #prepend>QQ</template>
+          </el-input>
+        </el-row>
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.music" clearable>
+            <template style="width: min-content" #prepend>Music</template>
+          </el-input>
+        </el-row>
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.github" clearable>
+            <template style="width: min-content" #prepend>Github</template>
+          </el-input>
+        </el-row>
+        <el-row justify="center" align="middle" class="about">
+          <el-input v-model="globalProperties.$userInfo.value.telegram" clearable>
+            <template style="width: min-content" #prepend>Telegram</template>
+          </el-input>
+        </el-row>
+        <el-divider style="margin:11px 0px 12px 0px !important;"/>
         <div id="operate">
           <el-link type="danger" style="margin-right: 10px" @click="ChangeTableVisible=!ChangeTableVisible">修改密码
           </el-link>
           <el-button type="primary" size="large" @click="submitChange">提交</el-button>
         </div>
+
+
+        <!--        <el-avatar style="width: 4vw;-->
+        <!--                          height: 4vw;-->
+        <!--                          position: absolute;-->
+        <!--                          top: 0px;-->
+        <!--                          left: 23%;-->
+        <!--                          transform: translate(-50%);"-->
+        <!--                   :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"-->
+        <!--        />-->
+        <!--        <span style="height: 4vw;-->
+        <!--                       position: absolute;-->
+        <!--                       left: 38%;-->
+        <!--                       font-size: 1.2vw;-->
+        <!--                       top:1vw;"-->
+        <!--        >Change Yourself</span>-->
+        <!--        <div style="margin-top: 18.8%">-->
+        <!--          <div>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.username" clearable maxlength="8" show-word-limit>-->
+        <!--                <template style="width: min-content" #prepend>昵称</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.intro" clearable>-->
+        <!--                <template style="width: min-content" #prepend>简介</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.qq" clearable>-->
+        <!--                <template style="width: min-content" #prepend>QQ</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.music" clearable>-->
+        <!--                <template style="width: min-content" #prepend>Music</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.github" clearable>-->
+        <!--                <template style="width: min-content" #prepend>Github</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--            <el-row class="about">-->
+        <!--              <el-input v-model="globalProperties.$userInfo.value.telegram" clearable>-->
+        <!--                <template style="width: min-content" #prepend>Telegram</template>-->
+        <!--              </el-input>-->
+        <!--            </el-row>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        <el-divider style="margin:12px 0px !important;"/>-->
+        <!--        <div id="operate">-->
+        <!--          <el-link type="danger" style="margin-right: 10px" @click="ChangeTableVisible=!ChangeTableVisible">修改密码-->
+        <!--          </el-link>-->
+        <!--          <el-button type="primary" size="large" @click="submitChange">提交</el-button>-->
+        <!--        </div>-->
       </el-tab-pane>
     </el-tabs>
   </el-card>
@@ -145,6 +198,7 @@ const Repeat = ref('')
 function exit() {
   globalProperties.$station.value = false;
   localStorage.removeItem("id");
+  location.replace(location.origin);
 }
 
 function submitChange() {
@@ -241,7 +295,8 @@ onBeforeMount(() => {
 }
 
 .about {
-  margin-bottom: 10px;
+  height: 36px;
+  margin-bottom: 5px;
 }
 
 span {
@@ -277,10 +332,6 @@ el-input {
   width: 100px;
 }
 
-#changeInfo {
-  height: 289px;
-  overflow: hidden;
-}
 
 .data {
   font-weight: bold;

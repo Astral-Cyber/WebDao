@@ -3,13 +3,13 @@
     <el-icon :size="20" style="color: #E57B89;margin-top: 3px">
       <Reading/>
     </el-icon>
-    <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">藏典阁</span>
+    <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">思量DAO上的藏典阁</span>
   </el-row>
   <el-divider id="divider" border-style="dashed" content-position="left"/>
 
   <!-- 文章列表-->
   <div v-for="article in tableData">
-    <el-row @click="$router.push({ name: 'article', params: { articleId: article.id}})"
+    <el-row @click="$router.push({ name: 'Article', params: { articleId: article.id}})"
             style="cursor:pointer;">
       <el-col :span="24" style="margin-bottom: 20px">
         <el-card class="articleCard">
@@ -92,8 +92,7 @@ import router from "../router/index.js";
 const route = useRoute()
 const total = ref('')
 const tableData = ref('')
-const page = ref(parseInt(route.params.id || 1))
-console.log(page.value)
+const page = ref(parseInt(route.params.page || 1))
 let imgApi = 'https://api.ixiaowai.cn/gqapi/gqapi.php'
 
 function fenye(current) {
@@ -113,7 +112,7 @@ function fenye(current) {
           router.push({
             name: "Page",
             params: {
-              id: current
+              page: current
             }
           })
         } else {
@@ -142,8 +141,8 @@ function getArticles() {
 
 
 onBeforeMount(() => {
-  if (typeof (route.params.id) !== "undefined") {
-    fenye(route.params.id);
+  if (typeof (route.params.page) !== "undefined") {
+    fenye(route.params.page);
   } else {
     fenye(1);
   }

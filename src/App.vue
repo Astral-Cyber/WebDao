@@ -13,7 +13,6 @@
         <el-aside class="side" width="30vw">
           <PersonInfo v-if="globalProperties.$station.value"/>
           <LoginCard v-if="!globalProperties.$station.value"/>
-          <div id="sakana-widget"></div>
           <el-backtop :right="37" :bottom="150">
             <div style="
                   height: 100%;
@@ -72,9 +71,4 @@ onBeforeMount(() => {
 
 <style scoped>
 
-@media screen and (max-width: 900px) {
-  .side {
-    display: none;
-  }
-}
 </style>

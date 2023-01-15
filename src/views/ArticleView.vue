@@ -1,9 +1,15 @@
 <template>
-  <el-row>
-    <el-icon :size="20" style="color: #E57B89;margin-top: 3px;cursor:pointer;" @click="back">
-      <Back/>
-    </el-icon>
-    <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">{{ article.topic }}</span>
+  <el-row style="height: 24px" justify="space-between" align="middle">
+    <el-col :span="3">
+      <span class="back" @click="back">
+      ⬅ 藏典阁
+    </span>
+    </el-col>
+    <el-col :span="10" style="text-align: center">
+      <span style="font-weight: bolder;color: #666666;font-size: x-large;">{{article.topic}}</span>
+    </el-col>
+    <el-col :span="3">
+    </el-col>
   </el-row>
   <el-divider id="divider" border-style="dashed" content-position="left"/>
   <!--      @copy-code-success="handleCopyCodeSuccess"-->
