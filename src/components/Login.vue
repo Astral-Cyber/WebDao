@@ -1,13 +1,17 @@
 <script setup>
 import {onBeforeMount, ref} from 'vue'
 import {useRoute, useRouter} from "vue-router";
+import useGetGlobalProperties from "../hook/useGlobal.js";
+import md5 from "js-md5"
 
+const globalProperties = useGetGlobalProperties()
 const router = useRouter()
 const route = useRoute()
 const user = ref('')
 const password = ref('')
 const host = 'http://astralcyber.ml:3000'
 const yan = ref('')
+
 onBeforeMount(() => {
   fetch('https://v1.hitokoto.cn/?c=j&c=e&c=e&c=f&min_length=17')
       .then(response => response.json())
@@ -17,37 +21,31 @@ onBeforeMount(() => {
       .catch(console.error)
 })
 
-function login(fake) {
-  if (fake) {
-    const myHeaders = new Headers()
-    myHeaders.append("Content-Type", "application/json")
-    let requestOptions = { // 里面不能有body
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    }
-    fetch(`${host}/users/${user.value}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-              if (data.id === user.value) {   // 验证是否存在该用户return data
-              } else {
-                throw new Error("用户名不存在")
-              }
-              if (data.password === password.value) {
-                if (!location.toString().match("guest")) {
-                  location.replace(location.href + data.id)
-                } else {
-                  location.replace(location.toString().replace("guest", data.id))
-                }
-              } else {
-                throw new Error("密码错误")
-              }
-            }
-        )
-        .catch(err => alert(err))
-  } else {
-    location.replace(location.href + "guest")
+function login() {
+  const myHeaders = new Headers()
+  myHeaders.append("Content-Type", "application/json")
+  let requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
   }
+  fetch(`${host}/users/${user.value}`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+            if (data.id === user.value) {   // 验证是否存在该用户return data
+            } else {
+              throw new Error("用户名不存在～")
+            }
+            if (data.password === md5(password.value)) {
+              globalProperties.$userInfo.value = data;
+              globalProperties.$station.value = true;
+              localStorage.setItem("id", data.id);
+            } else {
+              throw new Error("ops!密码错误")
+            }
+          }
+      )
+      .catch(err => alert(err))
 }
 </script>
 
@@ -68,12 +66,11 @@ function login(fake) {
       />
     </el-col>
   </el-row>
-  <el-row style="line-height: 34px;font-weight: bolder; font-size: 16px;">
-    <span v-text="yan" style="margin: 3px 0px 3px 0px;color: #666666;white-space: pre-wrap"></span>
+  <el-row style="line-height: 34px;font-weight: bolder; font-size: 16px;height: 74px;overflow: auto">
+    <span v-text="yan" id="yiyan"></span>
   </el-row>
   <el-divider style="margin:12px 0px !important;"/>
   <div id="operate">
-    <el-button v-if="route.params.uuid!=='guest'" size="large" @click="login(false)">游客</el-button>
     <el-button type="primary" size="large" @click="login(true)">登录</el-button>
   </div>
 </template>
@@ -85,5 +82,17 @@ function login(fake) {
 
 #operate {
   text-align: right;
+}
+
+#yiyan {
+  margin: 3px 0px 3px 0px;
+  color: #666666;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
 }
 </style>

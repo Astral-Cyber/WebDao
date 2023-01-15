@@ -1,44 +1,47 @@
 <template>
-  <el-container style="">
-    <el-main>
-      <el-container>
-        <!--主页左侧-->
-        <el-aside class="side" width="8vw">
-        </el-aside>
-        <!--主页中心-->
-        <el-main id="articleBody">
+  <el-row>
+    <el-icon :size="20" style="color: #E57B89;margin-top: 3px">
+      <Reading/>
+    </el-icon>
+    <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">藏典阁</span>
+  </el-row>
+  <el-divider id="divider" border-style="dashed" content-position="left"/>
+
+  <!-- 文章列表-->
+  <div v-for="article in tableData">
+    <el-row @click="$router.push({ name: 'article', params: { articleId: article.id}})"
+            style="cursor:pointer;">
+      <el-col :span="24" style="margin-bottom: 20px">
+        <el-card class="articleCard">
           <el-row>
-            <el-icon :size="20" style="color: #E57B89;margin-top: 1px">
-              <Reading/>
-            </el-icon>
-            <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">藏典阁</span>
-          </el-row>
-          <el-divider id="divider" border-style="dashed" content-position="left"/>
-          <!-- 文章列表-->
-          <div v-for="article in tableData">
-            <el-row v-if="article.release"
-                    @click="toArticle(article.id)"
-                    style="cursor:pointer;">
-              <el-col :span="24" style="margin-bottom: 20px">
-                <el-card class="articleCard">
-                  <el-row>
-                    <el-col :span="10" class="articleImgBox">
-                      <img :src="articleImg(article.id)" class="articleImg">
-                    </el-col>
-                    <el-col :span="14" style="padding: 15px">
-                      <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 20px;
+            <el-col :span="10" class="articleImgBox">
+              <img :src="articleImg(article.id)" class="articleImg">
+            </el-col>
+            <el-col :span="14" style="padding: 10px 15px 15px 15px">
+              <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
                       word-break:break-all;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 1;
+                      -webkit-box-orient: vertical;
                       margin: 0 0 10px;
-                        word-wrap:break-word">{{ article.topic }}</h1>
-                      <div style="height: 150px;">
-                        <span style="color: #777777;width:100%;
-                        display:block;
-                        white-space:pre-wrap;
-                        word-break:break-all;
-                        word-wrap:break-word;
-                        overflow:hidden;">{{ article.intro }}</span>
-                      </div>
-                      <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
+                      word-wrap:break-word">{{ article.topic }}</h1>
+              <div style="height: 150px;width: auto;">
+                        <span style="color: #777777;
+                          width:99%;
+                          display:block;
+                          padding: 0px 0px 0px 5px;
+                          white-space:pre-wrap;
+                          word-break:break-all;
+                          word-wrap:break-word;
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          display: -webkit-box;
+                          -webkit-line-clamp: 4;
+                          -webkit-box-orient: vertical;"
+                        >{{article.intro}}</span>
+              <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
                         <el-row>
                           <el-col :span="12">
                            <el-icon style="top: 2px">
@@ -66,42 +69,66 @@
                          </el-col>
                         </el-row>
                       </span>
-                    </el-col>
-                  </el-row>
-                </el-card>
-              </el-col>
-            </el-row>
-          </div>
-        </el-main>
-        <!--主页右侧-->
-        <el-aside class="side" width="30vw">
-          <PersonInfo v-if="station"/>
-          <LoginCard v-if="!station"/>
-        </el-aside>
-      </el-container>
-    </el-main>
-  </el-container>
+              </div>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+  <el-row style="width: 100%" class="pagination" align="middle" justify="center">
+    <el-pagination style="transform:scale(1.2,1.2);" :hide-on-single-page="true"
+                   :page-size="4"
+                   v-model:current-page="page" layout="prev, pager, next" :total="total"
+                   @current-change="fenye(page)"/>
+  </el-row>
 </template>
 
 <script setup>
 import {onBeforeMount, onBeforeUpdate, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import PersonInfo from "../components/PersonInfo.vue";
-import LoginCard from "../components/LoginCard.vue";
-import {ElMessage, ElMessageBox} from 'element-plus'
+import router from "../router/index.js";
 
-const id = ref("")
-const station = ref(false)
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const total = ref('')
 const tableData = ref('')
+const page = ref(parseInt(route.params.id || 1))
+console.log(page.value)
 let imgApi = 'https://api.ixiaowai.cn/gqapi/gqapi.php'
+
+function fenye(current) {
+  const host = "http://astralcyber.ml:3000";
+  const myHeaders = new Headers()
+  myHeaders.append("Content-Type", "application/json")
+  let requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  fetch(`${host}/article/?_page=${current}&_limit=4`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        tableData.value = data
+        if (current !== 1) {
+          router.push({
+            name: "Page",
+            params: {
+              id: current
+            }
+          })
+        } else {
+          router.push({
+            name: "Main",
+          })
+        }
+      })
+}
 
 function getArticles() {
   const host = "http://astralcyber.ml:3000";
   const myHeaders = new Headers()
   myHeaders.append("Content-Type", "application/json")
-  let requestOptions = { // 里面不能有body
+  let requestOptions = {
     method: "GET",
     headers: myHeaders,
     redirect: "follow",
@@ -109,26 +136,19 @@ function getArticles() {
   fetch(`${host}/article/`, requestOptions)
       .then(response => response.json())
       .then(data => {
-        tableData.value = data;
+        total.value = data.length;
       })
 }
 
-onBeforeMount(() => {
-  getArticles();
-  id.value = route.params.uuid;
-  if (typeof (route.params.uuid) !== "undefined" && route.params.uuid !== "guest") {
-    station.value = true;
-    id.value = route.params.uuid;
-  }
-})
 
-function toArticle(articleId) {
-  if (typeof (route.params.uuid) !== "undefined") {
-    router.push({name: 'article', params: {uuid: id.value, articleId: articleId,}})
+onBeforeMount(() => {
+  if (typeof (route.params.id) !== "undefined") {
+    fenye(route.params.id);
   } else {
-    alert("请登录或以游客模式继续");
+    fenye(1);
   }
-}
+  getArticles();
+})
 
 function articleImg(id) {
   // let url;
@@ -144,6 +164,14 @@ function articleImg(id) {
 </script>
 
 <style scoped>
+pagination + pagination {
+  margin-top: 10px;
+}
+
+pagination {
+  margin-bottom: 16px;
+}
+
 #divider {
   border-top: 2px rgba(129, 129, 129, 0.8) dashed !important;
 }

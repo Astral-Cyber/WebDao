@@ -1,5 +1,11 @@
+@font-face {
+    font-family: fz;
+    src: url("./font/by_aqqxs.woff2") format("woff2"),
+    url("./font/by_slate.woff2") format("woff2");
+}
+
 :root {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-family: fz, Inter, Avenir, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
@@ -13,6 +19,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+}
+
+* {
+    font-family: fz, Inter, Avenir, Helvetica, Arial, sans-serif;
 }
 
 /*a {*/
@@ -38,11 +48,7 @@ body {
     display: flex;
     min-width: 100vw;
     min-height: 100vh;
-    background-image: url("https://i.328888.xyz/2023/01/13/wrirp.jpeg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
+    background-color: white;
 }
 
 /*h1 {*/
@@ -76,6 +82,18 @@ body {
 #app {
     width: 100vw;
     margin: 0 auto;
+    background-image: url("https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/20230114185406.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#sakana-widget{
+    width: 120px;
+    position: fixed;
+    bottom: 0px;
+    right: -4px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -103,10 +121,11 @@ body {
     --el-card-padding: 0px !important;
     margin: 15px;
     width: 20vw;
-    height: 450px;
+    height: max-content;
     text-align: center;
     position: relative;
     transition: all 1s;
+    overflow: hidden;
 }
 
 #personCard:hover {
@@ -121,16 +140,6 @@ body {
     top: 0px;
     left: 50%;
     transform: translate(-50%);
-}
-
-#name {
-    font-weight: bolder;
-    font-size: 22px;
-}
-
-#intro {
-    font-weight: bold;
-    font-size: 16px;
 }
 
 .el-tabs__item {

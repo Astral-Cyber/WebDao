@@ -1,8 +1,9 @@
-import {createApp} from 'vue'
+import {createApp, ref} from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from "./router"
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 
 import VueMarkdownEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
@@ -17,23 +18,32 @@ import '@kangc/v-md-editor/lib/theme/style/github.css';
 // highlightjs
 import hljs from 'highlight.js';
 //List
-import createTodoListPlugin from '@kangc/v-md-editor/lib/plugins/todo-list/index';
-import '@kangc/v-md-editor/lib/plugins/todo-list/todo-list.css';
 
+import 'sakana-widget/lib/index.css';
+import SakanaWidget from 'sakana-widget';
+
+new SakanaWidget({autoFit: true, controls: false}).setState().mount('#sakana-widget');
 
 VMdPreview.use(githubTheme, {
     Hljs: hljs,
 });
 
-VueMarkdownEditor.use(createTodoListPlugin, vuepressTheme, {
+VueMarkdownEditor.use(vuepressTheme, {
     Prism,
 });
 
 const app = createApp(App)
 
+app.config.globalProperties.$station = ref(false)
+app.config.globalProperties.$userInfo = ref({
+    username: "Loading",
+    intro: "Loading",
+})
+
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
+
 app.use(VMdPreview)
 app.use(VueMarkdownEditor)
 app.use(router).mount('#app')

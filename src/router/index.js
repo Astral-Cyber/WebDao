@@ -4,19 +4,24 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/:uuid',
-            name: 'Pass',
-            component: () => import('../views/MainView.vue')
-        },
-        {
             path: '/',
             name: 'Main',
             component: () => import('../views/MainView.vue')
         },
         {
-            path: '/article/:articleId/:uuid',
+            path: '/:id',
+            name: 'Page',
+            component: () => import('../views/MainView.vue')
+        },
+        {
+            path: '/article/:articleId',
             name: 'article',
             component: () => import('../views/ArticleView.vue')
+        },
+        {
+            path: '/author',
+            name: 'author',
+            component: () => import('../views/AuthorView.vue')
         },
     ]
 })

@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue'
+import md5 from "js-md5"
 
 const user = ref('')
 const name = ref('')
@@ -18,15 +19,22 @@ function register() {
   requestOptions.body = JSON.stringify({
     id: user.value,
     username: name.value,
-    password: password.value,
+    password: md5(password.value),
+    articles: 0,
+    draft: 0,
+    qq: "QQ号",
+    music: "平台主页",
+    github: "主页链接",
+    telegram: "主页链接",
     intro: "来如风雨，去似微尘",
   });
   if (repeatPassword.value !== password.value) {
-    alert("两次输入的密码不一致，请检查")
+    alert("两次输入的密码不一致，请检查~")
   } else {
     fetch(`${host}/users`, requestOptions) // 这里的网址没有id
         .then(response => response.json())
-        .then(data => alert(data.id + "，注册成功"))
+        .then(data => alert(data.username + "，注册成功！"))
+        .catch(err => alert("该账号用户名已被注册！"))
   }
 }
 </script>
@@ -39,7 +47,7 @@ function register() {
     <el-input v-model="user" placeholder="用户名" clearable/>
   </el-row>
   <el-row>
-    <el-input v-model="name" placeholder="昵称" clearable/>
+    <el-input v-model="name" placeholder="昵称" clearable maxlength="8" show-word-limit/>
   </el-row>
   <el-row>
     <el-col>
