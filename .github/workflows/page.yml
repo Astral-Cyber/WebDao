@@ -20,7 +20,10 @@ jobs:
         node-version: 16.x
     
     - name: Build
-      run: yarn && yarn build
+      run: |
+        yarn install
+        yarn run build
+        cp dist/index.html dist/404.html
       
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
