@@ -28,3 +28,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: build
         publish_dir: ./dist
+        cname: blogdao.astralcyber.ml
