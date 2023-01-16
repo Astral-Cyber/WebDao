@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from 'vue'
 import md5 from "js-md5"
+import {ElMessage} from "element-plus";
 
 const user = ref('')
 const name = ref('')
@@ -9,6 +10,14 @@ const repeatPassword = ref('')
 const host = 'http://astralcyber.ml:3000'
 
 function register() {
+  if (user.value === '' || name.value === '' || password.value === '' || repeatPassword.value === '') {
+    ElMessage({
+      message: '请填写完整信息！',
+      type: 'error',
+      // 赋默认值
+    });
+    return;
+  }
   const myHeaders = new Headers()
   myHeaders.append("Content-Type", "application/json")
   let requestOptions = {
@@ -29,12 +38,23 @@ function register() {
     intro: "来如风雨，去似微尘",
   });
   if (repeatPassword.value !== password.value) {
-    alert("两次输入的密码不一致，请检查~")
+    ElMessage({
+      message: "两次输入的密码不一致，请检查~",
+      type: 'error',
+    })
   } else {
     fetch(`${host}/users`, requestOptions) // 这里的网址没有id
         .then(response => response.json())
-        .then(data => alert(data.username + "，注册成功！"))
-        .catch(err => alert("该账号用户名已被注册！"))
+        .then(data =>ElMessage({
+          message: data.username + "，注册成功～",
+          type: 'success',
+          // 赋默认值
+        }))
+        .catch(err => ElMessage({
+          message: "该用户名已被注册！",
+          type: 'error',
+          // 赋默认值
+        }))
   }
 }
 </script>

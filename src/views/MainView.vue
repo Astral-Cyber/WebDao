@@ -1,6 +1,6 @@
 <template>
-  <el-row>
-    <el-icon :size="20" style="color: #E57B89;margin-top: 3px">
+  <el-row style="height: 24px" align="middle">
+    <el-icon :size="20" style="color: #E57B89;margin-top: 2px">
       <Reading/>
     </el-icon>
     <span style="font-weight: bolder;color: #666666;font-size: larger;margin-left: 4.5px;">思量DAO上的藏典阁</span>
@@ -28,18 +28,7 @@
                       margin: 0 0 10px;
                       word-wrap:break-word">{{ article.topic }}</h1>
               <div style="height: 150px;width: auto;">
-                        <span style="color: #777777;
-                          width:99%;
-                          display:block;
-                          padding: 0px 0px 0px 5px;
-                          white-space:pre-wrap;
-                          word-break:break-all;
-                          word-wrap:break-word;
-                          overflow: hidden;
-                          text-overflow: ellipsis;
-                          display: -webkit-box;
-                          -webkit-line-clamp: 4;
-                          -webkit-box-orient: vertical;"
+                        <span class="introCard"
                         >{{article.intro}}</span>
               <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
                         <el-row>

@@ -3,6 +3,7 @@ import {onBeforeMount, ref} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 import md5 from "js-md5"
+import {ElMessage} from "element-plus";
 
 const globalProperties = useGetGlobalProperties()
 const router = useRouter()
@@ -37,15 +38,23 @@ function login() {
               throw new Error("用户名不存在～")
             }
             if (data.password === md5(password.value)) {
+              ElMessage({
+                message: data.username+", 欢迎来到思量DAO",
+                type: 'success',
+              })
               globalProperties.$userInfo.value = data;
               globalProperties.$station.value = true;
               localStorage.setItem("id", data.id);
             } else {
-              throw new Error("ops!密码错误")
+              throw new Error("密码错误～")
             }
           }
       )
-      .catch(err => alert(err))
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+        // 赋默认值
+      }))
 }
 </script>
 

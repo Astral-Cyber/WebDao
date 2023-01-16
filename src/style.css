@@ -96,9 +96,18 @@ body {
     right: -4px;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 950px) {
     .side {
         display: none;
+    }
+    .introCard{
+        -webkit-line-clamp: 2;
+    }
+}
+
+@media screen and (min-width: 951px) {
+    .introCard{
+        -webkit-line-clamp: 4;
     }
 }
 
@@ -139,6 +148,20 @@ body {
     border-color: rgba(255 255 255 / 100%) !important;
 }
 
+.introCard{
+    color: #777777;
+    width:99%;
+    display:block;
+    padding: 2px 0px 0px 5px;
+    white-space:pre-wrap;
+    word-break:break-all;
+    word-wrap:break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
 #photo {
     width: 8vw;
     height: 8vw;
@@ -158,8 +181,13 @@ body {
     font-weight: bolder;
     color: #E57B89;
     font-size: larger;
-    transition: color 0.5s ease;
+    transition: color 0.25s ease;
 }
+
 .back:hover {
     color: #f59ca7;
+}
+
+.el-dialog__body {
+    padding: 0px 20px 20px  20px !important;
 }

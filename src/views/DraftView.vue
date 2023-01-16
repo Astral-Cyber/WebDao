@@ -1,5 +1,6 @@
 <template>
-  <el-dialog width="80vw" v-model="editorVisible" title="Editor" align-center="align-center"
+  <el-dialog width="80vw" v-model="editorVisible" align-center="align-center"
+             fullscreen="fullscreen"
              :close-on-click-modal="false"
              @close="draft={
                   authorUuid: globalProperties.$userInfo.value.id,
@@ -13,13 +14,31 @@
                   tag: '',
                   like: 0
   }">
-    <v-md-editor v-model="draft.content" height="60vh" @save="Save"></v-md-editor>
+    <template #header>
+      <el-row align="middle" style="margin-bottom: 10px">
+        <span id="title" style="font-weight: bolder;font-size: 24px;color: #666666">Editor</span>
+
+        <el-input style="width: 30%;margin-left: 15px" v-model="draft.topic" clearable min="1">
+          <template #prepend>标题</template>
+        </el-input>
+        <el-input style="width: 30%;margin-left: 15px" v-model="draft.intro" clearable show-word-limit>
+          <template #prepend>简介</template>
+        </el-input>
+        <el-input style="width: 20%;margin-left: 15px" v-model="draft.assort" clearable maxlength="8"
+                  show-word-limit>
+          <template #prepend>分类</template>
+        </el-input>
+      </el-row>
+    </template>
+    <el-row justify="space-evenly" style="margin-bottom: 10px">
+    </el-row>
+    <v-md-editor v-model="draft.content" height="80vh" @save="Save"></v-md-editor>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="danger" @click="deleteDraft">
           删除
         </el-button>
-        <el-button type="primary" @click="">
+        <el-button type="primary" @click="releaseArticle">
           发布
         </el-button>
       </span>
@@ -33,10 +52,13 @@
     </span>
     </el-col>
     <el-col :span="10" style="text-align: center">
-      <span style="font-weight: bolder;color: #666666;font-size:x-large;">{{globalProperties.$userInfo.value.username }}的草稿箱</span>
+      <span style="font-weight: bolder;color: #666666;font-size:x-large;">{{
+          globalProperties.$userInfo.value.username
+        }}的草稿箱</span>
     </el-col>
     <el-col :span="6" style="text-align: right">
-      <span @click="back" style="cursor:pointer; font-weight: bolder;color: #989898;font-size: larger;">施工中</span>
+      <el-button style="font-size: larger" type="primary" @click="editorVisible=true" link>发布&nbsp;
+        <el-icon style="margin-top: 2px" :size="20"><MessageBox /></el-icon></el-button>
     </el-col>
   </el-row>
   <el-divider id="divider" border-style="dashed" content-position="left"/>
@@ -62,18 +84,7 @@
                       margin: 0 0 10px;
                       word-wrap:break-word">{{ article.topic }}</h1>
               <div style="height: 150px;width: auto;">
-                        <span style="color: #777777;
-                          width:99%;
-                          display:block;
-                          padding: 0px 0px 0px 5px;
-                          white-space:pre-wrap;
-                          word-break:break-all;
-                          word-wrap:break-word;
-                          overflow: hidden;
-                          text-overflow: ellipsis;
-                          display: -webkit-box;
-                          -webkit-line-clamp: 4;
-                          -webkit-box-orient: vertical;"
+                        <span class="introCard"
                         >{{ article.intro }}</span>
                 <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
                         <el-row>
@@ -125,6 +136,8 @@ import {useRoute, useRouter} from "vue-router";
 import router from "../router/index.js";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 import {ElMessage} from "element-plus";
+import DateFormat from "../hook/Date.js";
+import {MessageBox} from "@element-plus/icons-vue";
 
 let origin
 const editorVisible = ref(false)
@@ -137,6 +150,7 @@ const page = ref(parseInt(route.params.page || 1))
 let imgApi = 'https://api.ixiaowai.cn/gqapi/gqapi.php'
 
 const draft = ref({
+  id: '',
   authorUuid: globalProperties.$userInfo.value.id,
   topic: "",
   content: "",
@@ -153,9 +167,6 @@ const host = "http://astralcyber.ml:3000";
 const myHeaders = new Headers()
 myHeaders.append("Content-Type", "application/json")
 
-setInterval(() => {
-  console.log(draft.value)
-}, 5000)
 
 async function openEditor(id) {
   let requestOptions = {
@@ -214,9 +225,11 @@ async function getDraft() {
   await fetch(`${host}/draft/`, requestOptions)
       .then(response => response.json())
       .then(data => {
+        allData.value = []
         for (let i in data) {
-          if (data[i].authorUuid === globalProperties.$userInfo.value.id)
+          if (data[i].authorUuid === globalProperties.$userInfo.value.id) {
             allData.value.push(data[i]);
+          }
         }
         total.value = allData.value.length;
       })
@@ -225,6 +238,16 @@ async function getDraft() {
   } else {
     fenye(1);
   }
+}
+
+function flashUser() {
+  let request = {
+    method: "PATCH",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  request.body = JSON.stringify(globalProperties.$userInfo.value);
+  fetch(`${host}/users/${globalProperties.$userInfo.value.id}`, request)
 }
 
 async function deleteDraft() {
@@ -238,35 +261,143 @@ async function deleteDraft() {
   await fetch(`${host}/draft/${draft.value.id}`, requestOptions)
       .then(() => {
         ElMessage({
-          message: '删除成功',
+          message: '帖子删除成功',
           type: 'success',
-          // 赋默认值
-        });
+        })
+        globalProperties.$userInfo.value.draft--;
         editorVisible.value = false
+        total.value--;
+        //更新数据
+        flashUser();
       })
-      .catch(err => alert(err));
-  location.replace(location.origin + '/draft')
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }))
+  if (total.value % 4 === 0 || total.value % 4 === 1)
+    location.replace(location.origin + '/#/draft')
+  await getDraft()
 }
 
-
-function Save() {
-  let requestOptions = {
-    method: "PATCH",
+async function releaseArticle() {
+  if (draft.value.topic === '') {
+    ElMessage({
+      message: '标题不能为空！',
+      type: 'error',
+    });
+    return;
+  }
+  if (draft.value.intro === '') {
+    draft.value.intro = draft.value.content.substring(0, 155)
+  }
+  let requestDelete = {
+    method: "DELETE",
     headers: myHeaders,
     redirect: "follow",
   }
-  const newDraft = draft.value;
-  requestOptions.body = JSON.stringify(newDraft);
-  fetch(`${host}/draft/${draft.value.id}`, requestOptions)
+  let requestPost = {
+    method: "Post",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  if (draft.value.id !== '') {
+    //移出草稿箱
+    const newDraft = draft.value;
+    requestDelete.body = JSON.stringify(newDraft);
+    await fetch(`${host}/draft/${draft.value.id}`, requestDelete)
+        .then(() => {
+          globalProperties.$userInfo.value.draft--;
+          total.value--;
+        })
+        .catch(err => ElMessage({
+          message: err,
+          type: 'error',
+        }))
+  }
+  //移入已发布列表
+  const newArticle = draft.value;
+  newArticle.id = ''
+  newArticle.assort = "Default"
+  newArticle.createDate = newArticle.changeDate = DateFormat(new Date())
+  requestPost.body = JSON.stringify(newArticle);
+  await fetch(`${host}/article`, requestPost)
       .then(() => {
+        globalProperties.$userInfo.value.articles++;
+        editorVisible.value = false
         ElMessage({
-          message: '保存成功！',
+          message: "帖子发布成功～",
           type: 'success',
-          // 赋默认值
-        });
+        })
       })
-      .catch(err => alert(err));
-  getDraft()
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }))
+  //更新数据
+  flashUser();
+  if (total.value % 4 === 0)
+    location.replace(location.origin + '/#/draft')
+
+  await getDraft()
+}
+
+
+async function Save() {
+  if (draft.value.topic === '') {
+    ElMessage({
+      message: '标题不能为空！',
+      type: 'error',
+    });
+    return;
+  }
+  if (draft.value.assort === '') {
+    draft.value.assort = "Default"
+  }
+  if (draft.value.intro === '') {
+    draft.value.intro = draft.value.content.substring(0, 155)
+  }
+  if (draft.value.id !== '') {///更新
+    let requestOptions = {
+      method: "PATCH",
+      headers: myHeaders,
+      redirect: "follow",
+    }
+    const newDraft = draft.value;
+    newDraft.changeDate = DateFormat(new Date())
+    requestOptions.body = JSON.stringify(newDraft);
+    await fetch(`${host}/draft/${draft.value.id}`, requestOptions)
+        .then(() => {
+          ElMessage({
+            message: '已保存到草稿箱！',
+            type: 'success',
+          })
+        })
+        .catch(err => alert(err));
+  } else {//创建
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    }
+    const newDraft = draft.value;
+    newDraft.createDate = newDraft.changeDate = DateFormat(new Date())
+    requestOptions.body = JSON.stringify(newDraft);
+    await fetch(`${host}/draft/`, requestOptions)
+        .then(() => {
+          ElMessage({
+            message: '已保存到草稿箱！',
+            type: 'success',
+          });
+          globalProperties.$userInfo.value.draft++
+          total.value++
+          flashUser()
+        })
+        .catch(err => ElMessage({
+          message: err,
+          type: 'error',
+        }));
+  }
+  await getDraft()
 }
 
 function back() {
@@ -276,21 +407,6 @@ function back() {
 }
 
 onBeforeMount(() => {
-  if (localStorage.getItem("id") !== null) {
-    globalProperties.$station.value = true;
-    let requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    }
-    fetch(`${host}/users/${localStorage.getItem("id")}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-              globalProperties.$userInfo.value = data;
-            }
-        )
-        .catch(err => alert(err))
-  }
   getDraft();
 })
 
@@ -308,6 +424,13 @@ function articleImg(id) {
 </script>
 
 <style scoped>
+
+@media screen and (max-width: 840px) {
+  #title {
+    display: none;
+  }
+}
+
 pagination + pagination {
   margin-top: 10px;
 }

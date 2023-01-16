@@ -33,11 +33,12 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUpdate, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onBeforeUpdate, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import PersonInfo from "./components/PersonInfo.vue";
 import LoginCard from "./components/LoginCard.vue";
 import useGetGlobalProperties from "./hook/useGlobal.js";
+import {ElMessage} from "element-plus";
 
 const visible = ref(false)
 const globalProperties = useGetGlobalProperties()
@@ -46,6 +47,7 @@ const id = ref('')
 const route = useRoute();
 const router = useRouter();
 const host = 'http://astralcyber.ml:3000'
+
 
 onBeforeMount(() => {
   if (localStorage.getItem("id") !== null) {
@@ -64,9 +66,14 @@ onBeforeMount(() => {
               globalProperties.$userInfo.value = data;
             }
         )
-        .catch(err => alert(err))
+        .catch(err => ElMessage({
+          message: 'err',
+          type: 'error',
+          // 赋默认值
+        }))
   }
 })
+
 </script>
 
 <style scoped>

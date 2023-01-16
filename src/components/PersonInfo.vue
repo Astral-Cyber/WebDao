@@ -71,6 +71,7 @@
         </el-row>
         <el-divider style="margin:12px 0px !important;"/>
         <div id="operate">
+
           <el-button type="danger" size="large" @click="exit">退出</el-button>
         </div>
       </el-tab-pane>
@@ -184,6 +185,8 @@ import {onBeforeMount, ref} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 import md5 from "js-md5"
+import {ElMessage} from "element-plus";
+import {Edit} from "@element-plus/icons-vue";
 
 const globalProperties = useGetGlobalProperties();
 const activeName = ref('first')
@@ -213,9 +216,17 @@ function submitChange() {
   requestOptions.body = JSON.stringify(userData);
   fetch(`${host}/users/${globalProperties.$userInfo.value.id}`, requestOptions)
       .then(() => {
-        alert("修改成功～")
+        ElMessage({
+          message: "修改成功～",
+          type: 'success',
+          // 赋默认值
+        })
       })
-      .catch(err => alert(err));
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+        // 赋默认值
+      }));
 }
 
 function close() {
@@ -237,15 +248,27 @@ function changePassword() {
       requestOptions.body = JSON.stringify(userData);
       fetch(`${host}/users/${globalProperties.$userInfo.value.id}`, requestOptions)
           .then(() => {
-            alert("修改成功～")
+            ElMessage({
+              message: "修改成功～",
+              type: 'success',
+            })
             ChangeTableVisible.value = false;
           })
-          .catch(err => alert(err));
+          .catch(err => ElMessage({
+            message: err,
+            type: 'error',
+          }));
     } else {
-      alert("两次输入的密码不一致，请检查～")
+      ElMessage({
+        message: "两次输入的密码不一致，请检查～",
+        type: 'error',
+      })
     }
   } else {
-    alert("原密码错误，请重试～")
+    ElMessage({
+      message: "原密码错误，请重试～",
+      type: 'error',
+    })
   }
 }
 
@@ -269,7 +292,10 @@ onBeforeMount(() => {
               }
             }
         )
-        .catch(err => alert(err))
+        .catch(err => ElMessage({
+          message: err,
+          type: 'error',
+        }))
   }
 })
 

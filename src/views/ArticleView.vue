@@ -21,6 +21,7 @@
 <script setup>
 import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount, ref} from "vue";
+import {ElMessage} from "element-plus";
 
 const route = useRoute();
 const router = useRouter()
@@ -52,7 +53,10 @@ onBeforeMount(() => {
       .then(data => {
         article.value = data;
       })
-      .catch(err => alert(err))
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }))
 })
 
 function back() {
