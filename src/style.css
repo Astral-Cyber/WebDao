@@ -191,3 +191,25 @@ body {
 .el-dialog__body {
     padding: 0px 20px 20px  20px !important;
 }
+
+.el-tabs__nav-prev {
+    top: 6px;
+}
+
+.el-tabs__nav-prev > .el-icon{
+    transform: scale(1.1,1.1);
+    color: #303133;
+}
+
+.el-tabs__nav-next {
+    top: 6px;
+}
+
+.el-tabs__nav-next > .el-icon{
+    transform: scale(1.1,1.1);
+    color: #303133;
+}
+
+.changePassword > .el-dialog__body{
+    padding: 20px !important;
+}

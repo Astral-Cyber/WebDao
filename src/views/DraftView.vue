@@ -2,18 +2,7 @@
   <el-dialog width="80vw" v-model="editorVisible" align-center="align-center"
              fullscreen="fullscreen"
              :close-on-click-modal="false"
-             @close="draft={
-                  authorUuid: globalProperties.$userInfo.value.id,
-                  topic: '',
-                  content: '',
-                  intro: '',
-                  assort: '',
-                  author: globalProperties.$userInfo.value.username,
-                  createDate: '',
-                  changeDate: '',
-                  tag: '',
-                  like: 0
-  }">
+             @close="closeEditor">
     <template #header>
       <el-row align="middle" style="margin-bottom: 10px">
         <span id="title" style="font-weight: bolder;font-size: 24px;color: #666666">Editor</span>
@@ -32,14 +21,14 @@
     </template>
     <el-row justify="space-evenly" style="margin-bottom: 10px">
     </el-row>
-    <v-md-editor v-model="draft.content" height="80vh" @save="Save"></v-md-editor>
+    <v-md-editor v-model="draft.content" height="77vh" @save="Save"></v-md-editor>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="danger" @click="deleteDraft">
+        <el-button size="large" type="danger" @click="deleteDraft">
           删除
         </el-button>
-        <el-button type="primary" @click="releaseArticle">
-          发布
+        <el-button size="large" type="primary" @click="releaseArticle">
+          投送
         </el-button>
       </span>
     </template>
@@ -57,8 +46,7 @@
         }}的草稿箱</span>
     </el-col>
     <el-col :span="6" style="text-align: right">
-      <el-button style="font-size: larger" type="primary" @click="editorVisible=true" link>发布&nbsp;
-        <el-icon style="margin-top: 2px" :size="20"><MessageBox /></el-icon></el-button>
+
     </el-col>
   </el-row>
   <el-divider id="divider" border-style="dashed" content-position="left"/>
@@ -81,7 +69,8 @@
                       display: -webkit-box;
                       -webkit-line-clamp: 1;
                       -webkit-box-orient: vertical;
-                      margin: 0 0 10px;
+                      margin: 0;
+                      height: 30px;
                       word-wrap:break-word">{{ article.topic }}</h1>
               <div style="height: 150px;width: auto;">
                         <span class="introCard"
@@ -104,7 +93,7 @@
                            <el-icon style="top: 2px">
                              <Paperclip/>
                            </el-icon>
-                           发布于：{{ article.createDate }}
+                           建立于：{{ article.createDate }}
                          </el-col>
                           <el-col :span="12">
                            <el-icon style="top: 2px">
@@ -135,11 +124,10 @@ import {onBeforeMount, onBeforeUpdate, ref, toRaw} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import router from "../router/index.js";
 import useGetGlobalProperties from "../hook/useGlobal.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import DateFormat from "../hook/Date.js";
-import {MessageBox} from "@element-plus/icons-vue";
 
-let origin
+const alertSave = ref(true);
 const editorVisible = ref(false)
 const globalProperties = useGetGlobalProperties()
 const route = useRoute()
@@ -181,6 +169,7 @@ async function openEditor(id) {
         draft.value = data
       })
   editorVisible.value = true
+  alertSave.value = true;
 }
 
 function fenye(current) {
@@ -261,10 +250,11 @@ async function deleteDraft() {
   await fetch(`${host}/draft/${draft.value.id}`, requestOptions)
       .then(() => {
         ElMessage({
-          message: '帖子删除成功',
+          message: '稿纸已被折成纸飞机～',
           type: 'success',
         })
         globalProperties.$userInfo.value.draft--;
+        alertSave.value = false
         editorVisible.value = false
         total.value--;
         //更新数据
@@ -274,8 +264,19 @@ async function deleteDraft() {
         message: err,
         type: 'error',
       }))
-  if (total.value % 4 === 0 || total.value % 4 === 1)
-    location.replace(location.origin + '/#/draft')
+  if (total.value % 4 === 0 && route.params.page > 2){
+    await router.push({
+      name: route.name,
+      params: {
+        page: route.params.page - 1
+      }
+    })
+  }
+  if (total.value % 4 === 0 && route.params.page === 2){
+    await router.push({
+      name: "Draft",
+    })
+  }
   await getDraft()
 }
 
@@ -323,9 +324,10 @@ async function releaseArticle() {
   await fetch(`${host}/article`, requestPost)
       .then(() => {
         globalProperties.$userInfo.value.articles++;
+        alertSave.value = false
         editorVisible.value = false
         ElMessage({
-          message: "帖子发布成功～",
+          message: "稿纸投送成功～",
           type: 'success',
         })
       })
@@ -398,6 +400,26 @@ async function Save() {
         }));
   }
   await getDraft()
+}
+
+function closeEditor() {
+  if ((draft.value.content !== '' || draft.value.topic !== '') && alertSave.value) {
+    ElMessageBox.confirm(
+        '内容未保存，' + globalProperties.$userInfo.value.username + '真的要走吗？',
+        'Warning',
+        {
+          confirmButtonText: '狠心离开',
+          cancelButtonText: '保存并离开',
+          type: 'warning',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+        }
+    )
+        .catch(() => {
+          Save()
+        })
+  }
 }
 
 function back() {

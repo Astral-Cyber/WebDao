@@ -7,7 +7,7 @@
         </el-aside>
         <!--主页中心-->
         <el-main id="articleBody">
-          <router-view/>
+          <router-view :key="globalProperties.$reload.value"/>
         </el-main>
         <!--主页右侧-->
         <el-aside class="side" width="30vw">
@@ -33,26 +33,27 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onBeforeUpdate, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onBeforeUpdate, provide, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import PersonInfo from "./components/PersonInfo.vue";
 import LoginCard from "./components/LoginCard.vue";
 import useGetGlobalProperties from "./hook/useGlobal.js";
 import {ElMessage} from "element-plus";
 
-const visible = ref(false)
 const globalProperties = useGetGlobalProperties()
 const id = ref('')
-// const station = ref(false)
+// const station = ref(globalProperties.$reload.value)
 const route = useRoute();
 const router = useRouter();
 const host = 'http://astralcyber.ml:3000'
 
+function test() {
+  console.log(globalProperties.$userInfo.value.articles)
+}
 
 onBeforeMount(() => {
   if (localStorage.getItem("id") !== null) {
     globalProperties.$station.value = true;
-
     const myHeaders = new Headers()
     myHeaders.append("Content-Type", "application/json")
     let requestOptions = {

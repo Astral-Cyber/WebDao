@@ -1,6 +1,44 @@
 <template>
+  <!--  新建文章弹出框-->
+  <el-dialog width="80vw" v-model="editorVisible" align-center="align-center"
+             fullscreen="fullscreen"
+             :close-on-click-modal="false"
+             @close="closeEditor()">
+    <template #header>
+      <el-row align="middle" style="margin-bottom: 10px">
+        <span id="title" style="font-weight: bolder;font-size: 24px;color: #666666">Editor</span>
 
-  <el-dialog v-model="ChangeTableVisible" title="修改密码ing" align-center width="500" @close="close">
+        <el-input style="width: 30%;margin-left: 15px" v-model="draft.topic" clearable min="1">
+          <template #prepend>标题</template>
+        </el-input>
+        <el-input style="width: 30%;margin-left: 15px" v-model="draft.intro" clearable show-word-limit>
+          <template #prepend>简介</template>
+        </el-input>
+        <el-input style="width: 20%;margin-left: 15px" v-model="draft.assort" clearable maxlength="8"
+                  show-word-limit>
+          <template #prepend>分类</template>
+        </el-input>
+      </el-row>
+    </template>
+    <el-row justify="space-evenly" style="margin-bottom: 10px">
+    </el-row>
+    <v-md-editor v-model="draft.content" height="77vh" @save="Save"></v-md-editor>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button size="large" type="default" @click="buttonSave">
+          存入草稿箱
+        </el-button>
+        <el-button size="large" type="primary" @click="releaseArticle">
+          投送
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+
+  <!--  修改密码弹出框-->
+  <el-dialog custom-class="changePassword" v-model="ChangeTableVisible" title="修改密码ing" align-center width="500"
+             @close="close">
     <el-row class="about">
       <el-input v-model="Old" clearable type="password">
         <template style="width: min-content" #prepend>旧密码</template>
@@ -18,16 +56,16 @@
     </el-row>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="ChangeTableVisible = false">Cancel</el-button>
+        <el-button @click="ChangeTableVisible = false">不改了</el-button>
         <el-button type="primary" @click="changePassword">
-          Confirm
+          改
         </el-button>
       </span>
     </template>
   </el-dialog>
 
   <el-card id="personCard">
-    <el-tabs v-model="activeName" class="tabs">
+    <el-tabs v-model="activeName" class="tabs" :before-leave="tabLeave">
       <el-tab-pane class="ele" label="HOME" name="first">
         <el-avatar id="photo"
                    :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"
@@ -40,7 +78,7 @@
         <el-row justify="center" align="middle" class="userLine">
           <el-button @click="router.push({
              name:'Author'
-          })" style="font-size: 1.3vw" type="success" link>已发布: {{ globalProperties.$userInfo.value.articles }}
+          })" style="font-size: 1.3vw" type="success" link>已投送: {{ globalProperties.$userInfo.value.articles }}
           </el-button>
 
           <el-divider direction="vertical" border-style="dashed"/>
@@ -119,74 +157,28 @@
           </el-link>
           <el-button type="primary" size="large" @click="submitChange">提交</el-button>
         </div>
-
-
-        <!--        <el-avatar style="width: 4vw;-->
-        <!--                          height: 4vw;-->
-        <!--                          position: absolute;-->
-        <!--                          top: 0px;-->
-        <!--                          left: 23%;-->
-        <!--                          transform: translate(-50%);"-->
-        <!--                   :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"-->
-        <!--        />-->
-        <!--        <span style="height: 4vw;-->
-        <!--                       position: absolute;-->
-        <!--                       left: 38%;-->
-        <!--                       font-size: 1.2vw;-->
-        <!--                       top:1vw;"-->
-        <!--        >Change Yourself</span>-->
-        <!--        <div style="margin-top: 18.8%">-->
-        <!--          <div>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.username" clearable maxlength="8" show-word-limit>-->
-        <!--                <template style="width: min-content" #prepend>昵称</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.intro" clearable>-->
-        <!--                <template style="width: min-content" #prepend>简介</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.qq" clearable>-->
-        <!--                <template style="width: min-content" #prepend>QQ</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.music" clearable>-->
-        <!--                <template style="width: min-content" #prepend>Music</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.github" clearable>-->
-        <!--                <template style="width: min-content" #prepend>Github</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--            <el-row class="about">-->
-        <!--              <el-input v-model="globalProperties.$userInfo.value.telegram" clearable>-->
-        <!--                <template style="width: min-content" #prepend>Telegram</template>-->
-        <!--              </el-input>-->
-        <!--            </el-row>-->
-        <!--          </div>-->
-        <!--        </div>-->
-        <!--        <el-divider style="margin:12px 0px !important;"/>-->
-        <!--        <div id="operate">-->
-        <!--          <el-link type="danger" style="margin-right: 10px" @click="ChangeTableVisible=!ChangeTableVisible">修改密码-->
-        <!--          </el-link>-->
-        <!--          <el-button type="primary" size="large" @click="submitChange">提交</el-button>-->
-        <!--        </div>-->
       </el-tab-pane>
+
+      <el-tab-pane class="ele" name="third">
+        <template #label>
+          <!--          <el-icon style="transform: translate(0px,4px)" size="18"><MessageBox /></el-icon>-->
+          稿纸(新建文章)
+        </template>
+      </el-tab-pane>
+
+
     </el-tabs>
   </el-card>
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from 'vue'
+import {getCurrentInstance} from "vue";
+import {onBeforeMount, ref, nextTick} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 import md5 from "js-md5"
-import {ElMessage} from "element-plus";
-import {Edit} from "@element-plus/icons-vue";
+import {ElMessage, ElMessageBox} from "element-plus";
+import DateFormat from "../hook/Date.js";
 
 const globalProperties = useGetGlobalProperties();
 const activeName = ref('first')
@@ -197,6 +189,197 @@ const ChangeTableVisible = ref(false)
 const Old = ref('')
 const New = ref('')
 const Repeat = ref('')
+const alertSave = ref(true);
+const {ctx: that, proxy} = getCurrentInstance()
+
+/*稿纸功能变量及其函数实现*/
+const myHeaders = new Headers()
+myHeaders.append("Content-Type", "application/json")
+const editorVisible = ref(false)
+const draft = ref()
+
+function reload() {
+  const isRouterAlive = ref(true);
+  isRouterAlive.value = false;
+  nextTick(() => {
+    isRouterAlive.value = true;
+  });
+}
+
+function flashUser() {
+  let request = {
+    method: "PATCH",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  request.body = JSON.stringify(globalProperties.$userInfo.value);
+  fetch(`${host}/users/${globalProperties.$userInfo.value.id}`, request)
+}
+
+async function releaseArticle() {
+  if (draft.value.topic === '') {
+    ElMessage({
+      message: '标题不能为空！',
+      type: 'error',
+    });
+    return;
+  }
+  if (draft.value.intro === '') {
+    draft.value.intro = draft.value.content.substring(0, 155)
+  }
+  let requestDelete = {
+    method: "DELETE",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  let requestPost = {
+    method: "Post",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  //移入已发布列表
+  const newArticle = draft.value;
+  newArticle.id = ''
+  newArticle.assort = "Default"
+  newArticle.createDate = newArticle.changeDate = DateFormat(new Date())
+  requestPost.body = JSON.stringify(newArticle);
+  await fetch(`${host}/article`, requestPost)
+      .then(() => {
+        globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$userInfo.value.articles++;
+        alertSave.value = false
+        editorVisible.value = false
+        ElMessage({
+          message: "稿纸投送成功～",
+          type: 'success',
+        })
+      })
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }))
+  //更新数据
+  flashUser();
+}
+
+
+async function Save() {
+  console.log(draft.value.content, draft.value.topic !== ' ', alertSave.value)
+  if (draft.value.topic === '') {
+    ElMessage({
+      message: '标题不能为空！',
+      type: 'error',
+    });
+    return;
+  }
+  if (draft.value.assort === '') {
+    draft.value.assort = "Default"
+  }
+  if (draft.value.intro === '') {
+    draft.value.intro = draft.value.content.substring(0, 155)
+  }
+  let requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  const newDraft = draft.value;
+  newDraft.createDate = newDraft.changeDate = DateFormat(new Date())
+  requestOptions.body = JSON.stringify(newDraft);
+  await fetch(`${host}/draft/`, requestOptions)
+      .then(() => {
+        ElMessage({
+          message: '已保存到草稿箱！',
+          type: 'success',
+        });
+        globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$userInfo.value.draft++
+        //total.value++
+        flashUser()
+      })
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }));
+  //await getDraft()
+}
+
+async function buttonSave() {
+  if (draft.value.topic === '') {
+    ElMessage({
+      message: '标题不能为空！',
+      type: 'error',
+    });
+    return;
+  }
+  if (draft.value.assort === '') {
+    draft.value.assort = "Default"
+  }
+  if (draft.value.intro === '') {
+    draft.value.intro = draft.value.content.substring(0, 155)
+  }
+  let requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  const newDraft = draft.value;
+  newDraft.createDate = newDraft.changeDate = DateFormat(new Date())
+  requestOptions.body = JSON.stringify(newDraft);
+  await fetch(`${host}/draft/`, requestOptions)
+      .then(() => {
+        ElMessage({
+          message: '已保存到草稿箱！',
+          type: 'success',
+        });
+        alertSave.value = false
+        editorVisible.value = false;
+          globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$userInfo.value.draft++
+        //total.value++
+        flashUser()
+      })
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }));
+  //await getDraft()
+}
+
+function closeEditor() {
+  if ((draft.value.content !== '' || draft.value.topic !== '') && alertSave.value) {
+    ElMessageBox.confirm(
+        '内容未保存，' + globalProperties.$userInfo.value.username + '真的要走吗？',
+        'Warning',
+        {
+          confirmButtonText: '狠心离开',
+          cancelButtonText: '保存并离开',
+          type: 'warning',
+          showClose: false,
+          closeOnClickModal: false,
+          closeOnPressEscape: false,
+        }
+    ).then(() => {
+      draft.value = {
+        id: '',
+        authorUuid: globalProperties.$userInfo.value.id,
+        topic: '',
+        content: '',
+        intro: '',
+        assort: '',
+        author: globalProperties.$userInfo.value.username,
+        createDate: '',
+        changeDate: '',
+        tag: '',
+        like: 0
+      }
+    }).catch(() => {
+      Save()
+    })
+  }
+}
+
+/***********************************************/
 
 function exit() {
   globalProperties.$station.value = false;
@@ -204,9 +387,28 @@ function exit() {
   location.replace(location.origin);
 }
 
+function tabLeave(activeName, oldActiveName) {
+  if (activeName === "third") {
+    draft.value = {
+      id: "",
+      authorUuid: globalProperties.$userInfo.value.id,
+      topic: "",
+      content: "",
+      intro: "",
+      assort: "",
+      author: globalProperties.$userInfo.value.username,
+      createDate: "",
+      changeDate: "",
+      tag: "",
+      like: 0
+    }
+    alertSave.value = true;
+    editorVisible.value = true;
+    return false;
+  }
+}
+
 function submitChange() {
-  const myHeaders = new Headers()
-  myHeaders.append("Content-Type", "application/json")
   let requestOptions = {
     method: "PATCH",
     headers: myHeaders,
@@ -373,6 +575,5 @@ el-input {
 .name {
   font-weight: normal;
 }
-
 
 </style>

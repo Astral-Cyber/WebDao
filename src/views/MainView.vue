@@ -25,7 +25,8 @@
                       display: -webkit-box;
                       -webkit-line-clamp: 1;
                       -webkit-box-orient: vertical;
-                      margin: 0 0 10px;
+                      margin: 0;
+                      height: 30px;
                       word-wrap:break-word">{{ article.topic }}</h1>
               <div style="height: 150px;width: auto;">
                         <span class="introCard"
@@ -48,7 +49,7 @@
                            <el-icon style="top: 2px">
                              <Paperclip/>
                            </el-icon>
-                           发布于：{{ article.createDate }}
+                           投送于：{{ article.createDate }}
                          </el-col>
                           <el-col :span="12">
                            <el-icon style="top: 2px">

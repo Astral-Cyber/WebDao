@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from "./router"
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/theme-chalk/el-message-box.css'
 
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
@@ -58,6 +59,7 @@ VMdPreview.use(githubTheme, {
 
 const app = createApp(App)
 
+app.config.globalProperties.$reload = ref(true)
 app.config.globalProperties.$station = ref(false)
 app.config.globalProperties.$userInfo = ref({
     username: "Loading",
