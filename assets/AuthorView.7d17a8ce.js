@@ -1,1 +1,0 @@
-import{ac as l,o as r,S as n,u as s,E as u}from"./@vue.0557ba9e.js";const d={__name:"AuthorView",setup(m){let e="666";return(p,o)=>{const a=l("v-md-editor");return r(),n(a,{modelValue:s(e),"onUpdate:modelValue":o[0]||(o[0]=t=>u(e)?e.value=t:e=t),height:"400px"},null,8,["modelValue"])}}};export{d as default};
