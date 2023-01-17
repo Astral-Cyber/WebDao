@@ -27,6 +27,7 @@
                       -webkit-box-orient: vertical;
                       margin: 0;
                       height: 30px;
+                      line-height: 30px;
                       word-wrap:break-word">{{ article.topic }}</h1>
               <div style="height: 150px;width: auto;">
                         <span class="introCard"

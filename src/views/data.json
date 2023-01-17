@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": "0",
+      "username": "Astral",
+      "password": "123456",
+      "articles": 10,
+      "draft": 10,
+      "github": "https://github.com/Astral-Cyber",
+      "intro": "来如风雨，去似微尘"
+    },
+    {
+      "id": "1",
+      "username": "123",
+      "password": "123"
+    }
+  ],
+  "article": [
+    {
+      "id": 0,
+      "authorUuid": "Astral",
+      "topic": "Test1",
+      "content": "# 🤯记录你的灵感瞬间～\n## [语法帮助](https://markdown.com.cn/)(👈点击前往)\n## 部分效果预览\n### 标题（Heading）\n# H1\n## H2\n### H3\n### 粗体（Bold）\n**bold text**\n### 斜体（Italic）\n*italicized text*\n### 删除线（Strikethrough）\n~~The world is flat.~~\n### 引用块（Blockquote）\n> blockquote\n### 有序列表（Ordered List）\n1. First item\n2. Second item\n3. Third item\n### 无序列表（Unordered List）\n- First item\n- Second item\n- Third item\n### 任务列表（Task List）\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media\n### 代码块（Fenced Code Block）\n``` java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World\");\n    }\n}\n```\n### 分隔线（Horizontal Rule）\n***\n### 链接（Link）\n[Github](https://github.com/Astral-Cyber/NoteDAO)\n### 图片（Image）\n![Image](https://s1.ax1x.com/2022/10/07/x3vEM8.jpg)",
+      "intro": "简介",
+      "assort": "分类",
+      "author": "作者",
+      "createDate": "发布时间",
+      "changeDate": "修改时间",
+      "like": 0
+    }
+  ],
+  "draft": [
+    {
+      "id": 0,
+      "authorUuid": "Astral",
+      "topic": "Test1",
+      "content": "# 🤯记录你的灵感瞬间～\n## [语法帮助](https://markdown.com.cn/)(👈点击前往)\n## 部分效果预览\n### 标题（Heading）\n# H1\n## H2\n### H3\n### 粗体（Bold）\n**bold text**\n### 斜体（Italic）\n*italicized text*\n### 删除线（Strikethrough）\n~~The world is flat.~~\n### 引用块（Blockquote）\n> blockquote\n### 有序列表（Ordered List）\n1. First item\n2. Second item\n3. Third item\n### 无序列表（Unordered List）\n- First item\n- Second item\n- Third item\n### 任务列表（Task List）\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media\n### 代码块（Fenced Code Block）\n``` java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World\");\n    }\n}\n```\n### 分隔线（Horizontal Rule）\n***\n### 链接（Link）\n[Github](https://github.com/Astral-Cyber/NoteDAO)\n### 图片（Image）\n![Image](https://s1.ax1x.com/2022/10/07/x3vEM8.jpg)",
+      "intro": "简介",
+      "assort": "分类",
+      "author": "作者",
+      "createDate": "发布时间",
+      "changeDate": "修改时间",
+      "like": 0
+    },
+    {
+      "id": 1,
+      "authorUuid": "Astral",
+      "topic": "Test1",
+      "content": "# 🤯记录你的灵感瞬间～\n## [语法帮助](https://markdown.com.cn/)(👈点击前往)\n## 部分效果预览\n### 标题（Heading）\n# H1\n## H2\n### H3\n### 粗体（Bold）\n**bold text**\n### 斜体（Italic）\n*italicized text*\n### 删除线（Strikethrough）\n~~The world is flat.~~\n### 引用块（Blockquote）\n> blockquote\n### 有序列表（Ordered List）\n1. First item\n2. Second item\n3. Third item\n### 无序列表（Unordered List）\n- First item\n- Second item\n- Third item\n### 任务列表（Task List）\n- [x] Write the press release\n- [ ] Update the website\n- [ ] Contact the media\n### 代码块（Fenced Code Block）\n``` java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World\");\n    }\n}\n```\n### 分隔线（Horizontal Rule）\n***\n### 链接（Link）\n[Github](https://github.com/Astral-Cyber/NoteDAO)\n### 图片（Image）\n![Image](https://s1.ax1x.com/2022/10/07/x3vEM8.jpg)",
+      "intro": "简介",
+      "assort": "分类",
+      "author": "作者",
+      "createDate": "发布时间",
+      "changeDate": "修改时间",
+      "like": 0
+    }
+  ]
+}

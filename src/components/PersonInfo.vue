@@ -73,7 +73,7 @@
         <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
         <div style="margin-bottom: 6px"><span id="name">Hi, {{ globalProperties.$userInfo.value.username }}</span></div>
         <el-row justify="center" style="height: 42px" align="middle">
-          <span id="intro">{{ globalProperties.$userInfo.value.intro }}</span>
+          <span id="intro" v-text="globalProperties.$userInfo.value.intro===''?yan:globalProperties.$userInfo.value.intro"></span>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
           <el-button @click="router.push({
@@ -89,7 +89,7 @@
           </el-button>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
-          <a :href="'https://api.liitk.com/s/qrcode/api?text='+globalProperties.$userInfo.value.qq+'&size=300px'">
+          <a :href="globalProperties.$userInfo.value.qq!=='' ? 'https://api.liitk.com/s/qrcode/api?text='+globalProperties.$userInfo.value.qq+'&size=300px':''">
             <img class="social" src="https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/QQ-circle-fill.svg"/>
           </a>
           &#12288;
@@ -128,7 +128,7 @@
         </el-row>
         <el-row justify="center" align="middle" class="about">
           <el-input v-model="globalProperties.$userInfo.value.intro" clearable>
-            <template style="width: min-content" #prepend>简介</template>
+            <template style="width: min-content" #prepend>个签</template>
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
@@ -191,6 +191,7 @@ const New = ref('')
 const Repeat = ref('')
 const alertSave = ref(true);
 const {ctx: that, proxy} = getCurrentInstance()
+const yan = ref('')
 
 /*稿纸功能变量及其函数实现*/
 const myHeaders = new Headers()
@@ -334,7 +335,7 @@ async function buttonSave() {
         });
         alertSave.value = false
         editorVisible.value = false;
-          globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$reload.value = !globalProperties.$reload.value;
         globalProperties.$userInfo.value.draft++
         //total.value++
         flashUser()
@@ -406,9 +407,39 @@ function tabLeave(activeName, oldActiveName) {
     editorVisible.value = true;
     return false;
   }
+  if (oldActiveName === "second") {
+    if (localStorage.getItem("id") !== null) {
+      globalProperties.$station.value = true;
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+      let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      }
+      fetch(`${host}/users/${localStorage.getItem("id")}`, requestOptions)
+          .then(response => response.json())
+          .then(data => {
+                globalProperties.$userInfo.value = data;
+              }
+          )
+          .catch(err => ElMessage({
+            message: 'err',
+            type: 'error',
+            // 赋默认值
+          }))
+    }
+  }
 }
 
 function submitChange() {
+  if (globalProperties.$userInfo.value.username === '') {
+    ElMessage({
+      message: "总要有个昵称吧？",
+      type: 'error',
+    })
+    return;
+  }
   let requestOptions = {
     method: "PATCH",
     headers: myHeaders,
@@ -475,30 +506,38 @@ function changePassword() {
 }
 
 onBeforeMount(() => {
-  if (typeof (route.params.uuid) !== "undefined") {
-    globalProperties.$station.value = true;
-    const myHeaders = new Headers()
-    myHeaders.append("Content-Type", "application/json")
-    let requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    }
-    fetch(`${host}/users/${route.params.uuid}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-              if (data.id === route.params.uuid) {   // 验证是否存在该用户return data
-                globalProperties.$userInfo.value = data;
-              } else {
-                globalProperties.$station.value = false;
-              }
-            }
-        )
-        .catch(err => ElMessage({
-          message: err,
-          type: 'error',
-        }))
-  }
+  fetch('https://v1.hitokoto.cn/?c=j&c=e&c=e&c=f&min_length=17')
+      .then(response => response.json())
+      .then(data => {
+        yan.value = data.hitokoto;
+      })
+      .catch(console.error)
+
+  // if (typeof (route.params.uuid) !== "undefined") {
+  //   globalProperties.$station.value = true;
+  //   const myHeaders = new Headers()
+  //   myHeaders.append("Content-Type", "application/json")
+  //   let requestOptions = {
+  //     method: "GET",
+  //     headers: myHeaders,
+  //     redirect: "follow",
+  //   }
+  //   fetch(`${host}/users/${route.params.uuid}`, requestOptions)
+  //       .then(response => response.json())
+  //       .then(data => {
+  //             if (data.id === route.params.uuid) {   // 验证是否存在该用户return data
+  //               globalProperties.$userInfo.value = data;
+  //             } else {
+  //               globalProperties.$station.value = false;
+  //             }
+  //           }
+  //       )
+  //       .catch(err => ElMessage({
+  //         message: err,
+  //         type: 'error',
+  //       }))
+  // }
+
 })
 
 </script>

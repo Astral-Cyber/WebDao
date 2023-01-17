@@ -4,6 +4,7 @@
       <el-container>
         <!--主页左侧-->
         <el-aside class="side" width="8vw">
+<!--          <el-button @click="test"></el-button>-->
         </el-aside>
         <!--主页中心-->
         <el-main id="articleBody">
@@ -48,7 +49,8 @@ const router = useRouter();
 const host = 'http://astralcyber.ml:3000'
 
 function test() {
-  console.log(globalProperties.$userInfo.value.articles)
+  let pattern = /"(Main)+|(Page)+"/
+  console.log(pattern.test(route.name.toString()))
 }
 
 onBeforeMount(() => {
@@ -72,6 +74,12 @@ onBeforeMount(() => {
           type: 'error',
           // 赋默认值
         }))
+  }else {
+      ElMessage({
+        message: '未登录账号',
+        type: 'info',
+        // 赋默认值
+      })
   }
 })
 
