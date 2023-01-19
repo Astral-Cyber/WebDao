@@ -94,13 +94,13 @@
                            <el-icon style="top: 2px">
                              <Paperclip/>
                            </el-icon>
-                           建立于：{{ article.createDate }}
+                           建立于：{{ DateFormat(new Date(article.createDate)) }}
                          </el-col>
                           <el-col :span="12">
                            <el-icon style="top: 2px">
                              <EditPen/>
                            </el-icon>
-                           修改于：{{ article.changeDate }}
+                           修改于：{{ DateFormat(new Date(article.changeDate)) }}
                          </el-col>
                         </el-row>
                       </span>
@@ -114,7 +114,7 @@
 
   <el-row style="width: 100%" class="pagination" align="middle" justify="center">
     <el-pagination style="transform:scale(1.2,1.2);" :hide-on-single-page="true"
-                   :page-size="4"
+                   :page-size="5"
                    v-model:current-page="page" layout="prev, pager, next" :total="total"
                    @current-change="fenye(page)"/>
   </el-row>
@@ -146,10 +146,11 @@ const article = ref({
   intro: "",
   assort: "",
   author: globalProperties.$userInfo.value.username,
-  createDate: "",
-  changeDate: "",
+  createDate: new Date(),
+  changeDate: new Date(),
   tag: "",
-  like: 0
+  like: [],
+  weight: 0,
 })
 
 const host = "http://astralcyber.ml:3000";
@@ -174,7 +175,7 @@ async function openEditor(id) {
 }
 
 function fenye(current) {
-  tableData.value = toRaw(allData.value).slice(current * 4 - 4, current * 4);
+  tableData.value = toRaw(allData.value).slice(current * 5 - 5, current * 5);
   if (current !== 1) {
     router.push({
       name: "AuthorPage",
@@ -266,7 +267,7 @@ async function deleteArticle() {
         message: err,
         type: 'error',
       }))
-  if (total.value % 4 === 0 && route.params.page > 2) {
+  if (total.value % 5 === 0 && route.params.page > 2) {
     await router.push({
       name: route.name,
       params: {
@@ -274,9 +275,9 @@ async function deleteArticle() {
       }
     })
   }
-  if (total.value % 4 === 0 && route.params.page === 2) {
+  if (total.value % 5 === 0 && route.params.page === 2) {
     await router.push({
-      name: "Article",
+      name: "Author",
     })
   }
   await getArticle()
@@ -302,7 +303,7 @@ async function Save() {
     redirect: "follow",
   }
   const newArticle = article.value;
-  newArticle.changeDate = DateFormat(new Date())
+  newArticle.changeDate = new Date()
   requestOptions.body = JSON.stringify(newArticle);
   await fetch(`${host}/article/${article.value.id}`, requestOptions)
       .then(() => {

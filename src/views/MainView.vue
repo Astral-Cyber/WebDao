@@ -51,13 +51,13 @@
                            <el-icon style="top: 2px">
                              <Paperclip/>
                            </el-icon>
-                           投送于：{{ article.createDate }}
+                           投送于：{{ DateFormat(new Date(article.createDate)) }}
                          </el-col>
                           <el-col :span="12">
                            <el-icon style="top: 2px">
                              <EditPen/>
                            </el-icon>
-                           修改于：{{ article.changeDate }}
+                           修改于：{{ DateFormat(new Date(article.changeDate)) }}
                          </el-col>
                         </el-row>
                       </span>
@@ -70,7 +70,7 @@
   </div>
   <el-row style="width: 100%" class="pagination" align="middle" justify="center">
     <el-pagination style="transform:scale(1.2,1.2);" :hide-on-single-page="true"
-                   :page-size="4"
+                   :page-size="5"
                    v-model:current-page="page" layout="prev, pager, next" :total="total"
                    @current-change="fenye(page)"/>
   </el-row>
@@ -80,7 +80,10 @@
 import {onBeforeMount, onBeforeUpdate, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import router from "../router/index.js";
+import DateFormat from "../hook/Date";
+import useGetGlobalProperties from "../hook/useGlobal.js";
 
+const globalProperties = useGetGlobalProperties()
 const route = useRoute()
 const total = ref('')
 const tableData = ref('')
@@ -96,7 +99,7 @@ function fenye(current) {
     headers: myHeaders,
     redirect: "follow",
   }
-  fetch(`${host}/article/?_page=${current}&_limit=4`, requestOptions)
+  fetch(`${host}/article/?_sort=weight&_order=desc&_page=${current}&_limit=5`, requestOptions)
       .then(response => response.json())
       .then(data => {
         tableData.value = data
@@ -128,6 +131,7 @@ function getArticles() {
       .then(response => response.json())
       .then(data => {
         total.value = data.length;
+        localStorage.setItem('allHas',total.value);
       })
 }
 

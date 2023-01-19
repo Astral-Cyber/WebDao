@@ -78,10 +78,19 @@
         </el-row>
         <el-row justify="center" align="middle" style="height: 42px;margin-top: 10px;">
 
-          <el-badge style="" :value="globalProperties.$userInfo.value.articles" type="primary">
+          <el-badge v-if="globalProperties.$userInfo.value.id!=='admin'" style=""
+                    :value="globalProperties.$userInfo.value.articles" type="primary">
             <el-button @click="router.push({
              name:'Author'
           })" style="font-size: 1.3vw" type="primary" link>已投送
+            </el-button>
+          </el-badge>
+
+          <el-badge v-if="globalProperties.$userInfo.value.id==='admin'" style=""
+                    :value="globalProperties.$allHas.value" type="primary">
+            <el-button @click="router.push({
+             name:'Admin'
+          })" style="font-size: 1.3vw" type="primary" link>管理页
             </el-button>
           </el-badge>
           &nbsp;
@@ -190,6 +199,7 @@ import md5 from "js-md5"
 import {ElMessage, ElMessageBox} from "element-plus";
 import DateFormat from "../hook/Date.js";
 
+
 const globalProperties = useGetGlobalProperties();
 const activeName = ref('first')
 const host = 'http://astralcyber.ml:3000'
@@ -202,20 +212,13 @@ const Repeat = ref('')
 const alertSave = ref(true);
 const {ctx: that, proxy} = getCurrentInstance()
 const yan = ref('')
+const allHas = ref(localStorage.getItem('allHas'))
 
 /*稿纸功能变量及其函数实现*/
 const myHeaders = new Headers()
 myHeaders.append("Content-Type", "application/json")
 const editorVisible = ref(false)
 const draft = ref()
-
-function reload() {
-  const isRouterAlive = ref(true);
-  isRouterAlive.value = false;
-  nextTick(() => {
-    isRouterAlive.value = true;
-  });
-}
 
 function flashUser() {
   let request = {
@@ -252,12 +255,15 @@ async function releaseArticle() {
   const newArticle = draft.value;
   newArticle.id = ''
   newArticle.assort = "Default"
-  newArticle.createDate = newArticle.changeDate = DateFormat(new Date())
+  newArticle.createDate = newArticle.changeDate = new Date()
   requestPost.body = JSON.stringify(newArticle);
   await fetch(`${host}/article`, requestPost)
       .then(() => {
         globalProperties.$reload.value = !globalProperties.$reload.value;
-        globalProperties.$userInfo.value.articles++;
+        if (globalProperties.$userInfo.value.id !== 'admin')
+          globalProperties.$userInfo.value.articles++;
+        else
+          globalProperties.$allHas.value++;
         alertSave.value = false
         editorVisible.value = false
         ElMessage({
@@ -295,7 +301,7 @@ async function Save() {
     redirect: "follow",
   }
   const newDraft = draft.value;
-  newDraft.createDate = newDraft.changeDate = DateFormat(new Date())
+  newDraft.createDate = newDraft.changeDate = new Date()
   requestOptions.body = JSON.stringify(newDraft);
   await fetch(`${host}/draft/`, requestOptions)
       .then(() => {
@@ -335,7 +341,7 @@ async function buttonSave() {
     redirect: "follow",
   }
   const newDraft = draft.value;
-  newDraft.createDate = newDraft.changeDate = DateFormat(new Date())
+  newDraft.createDate = newDraft.changeDate = new Date()
   requestOptions.body = JSON.stringify(newDraft);
   await fetch(`${host}/draft/`, requestOptions)
       .then(() => {
@@ -379,10 +385,11 @@ function closeEditor() {
         intro: '',
         assort: '',
         author: globalProperties.$userInfo.value.username,
-        createDate: '',
-        changeDate: '',
+        createDate: new Date(),
+        changeDate: new Date(),
         tag: '',
-        like: 0
+        like: [],
+        weight: 0
       }
     }).catch(() => {
       Save()
@@ -408,10 +415,11 @@ function tabLeave(activeName, oldActiveName) {
       intro: "",
       assort: "",
       author: globalProperties.$userInfo.value.username,
-      createDate: "",
-      changeDate: "",
+      createDate: new Date(),
+      changeDate: new Date(),
       tag: "",
-      like: 0
+      like: [],
+      weight: 0
     }
     alertSave.value = true;
     editorVisible.value = true;

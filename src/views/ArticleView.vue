@@ -52,17 +52,17 @@ const starStation = ref(false);
 const route = useRoute();
 const router = useRouter()
 const article = ref({
+  id: 0,
+  topic: "Loading",
+  content: "# Loading",
+  intro: "Loading",
   assort: "Loading",
   author: "Loading",
-  authorUuid: "Loading",
-  changeDate: "Loading",
-  content: "# Loading",
-  createDate: "Loading",
-  id: 0, intro: "Loading",
-  like: [],
-  release: true,
+  createDate: new Date(),
+  changeDate: new Date(),
   tag: "Loading",
-  topic: "Loading",
+  like: [],
+  weight: 0,
 })
 const host = 'http://astralcyber.ml:3000'
 let index = -1;
@@ -95,6 +95,17 @@ async function getArticle() {
 
 onBeforeMount(() => {
   getArticle();
+  let timer;
+  cancelAnimationFrame(timer);
+  timer = requestAnimationFrame(function fn(){
+    let toTop = document.body.scrollTop || document.documentElement.scrollTop;
+    if(toTop > 0){
+      scrollTo(0,toTop-25);
+      timer = requestAnimationFrame(fn);
+    }else{
+      cancelAnimationFrame(timer);
+    }
+  });
 })
 
 
@@ -130,7 +141,7 @@ function starFunc() {
   starStation.value = !starStation.value
   setTimeout(function () {
     DOM.blur();
-    globalProperties.$reload.value=!globalProperties.$reload.value;
+    globalProperties.$reload.value = !globalProperties.$reload.value;
     //   DOM.style.color = '';
     // DOM.style.setProperty('--starColor', '#3F9EFF');
   }, 500)

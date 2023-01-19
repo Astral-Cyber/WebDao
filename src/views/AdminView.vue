@@ -7,13 +7,13 @@
       <el-row align="middle" style="margin-bottom: 10px">
         <span id="title" style="font-weight: bolder;font-size: 24px;color: #666666">Editor</span>
 
-        <el-input style="width: 30%;margin-left: 15px" v-model="draft.topic" clearable min="1">
+        <el-input style="width: 30%;margin-left: 15px" v-model="article.topic" clearable min="1">
           <template #prepend>标题</template>
         </el-input>
-        <el-input style="width: 30%;margin-left: 15px" v-model="draft.intro" clearable show-word-limit>
+        <el-input style="width: 30%;margin-left: 15px" v-model="article.intro" clearable show-word-limit>
           <template #prepend>简介</template>
         </el-input>
-        <el-input style="width: 20%;margin-left: 15px" v-model="draft.assort" clearable maxlength="8"
+        <el-input style="width: 20%;margin-left: 15px" v-model="article.assort" clearable maxlength="8"
                   show-word-limit>
           <template #prepend>分类</template>
         </el-input>
@@ -21,14 +21,20 @@
     </template>
     <el-row justify="space-evenly" style="margin-bottom: 10px">
     </el-row>
-    <v-md-editor v-model="draft.content" height="77vh" @save="Save"></v-md-editor>
+    <v-md-editor v-model="article.content" height="77vh" @save="Save"></v-md-editor>
     <template #footer>
       <span class="dialog-footer">
-        <el-button size="large" type="danger" @click="deleteDraft">
+        <el-button size="large" type="danger" @click="deleteArticle">
           删除
         </el-button>
-        <el-button size="large" type="primary" @click="releaseArticle">
-          投送
+                <el-button size="large" type="primary" @click="buttonSave">
+          修改
+        </el-button>
+        <el-button v-if="article.weight===0" size="large" type="success" @click="to(9999999999)">
+          置顶
+        </el-button>
+        <el-button v-if="article.weight!==0" size="large" type="warning" @click="to(0)">
+          取消置顶
         </el-button>
       </span>
     </template>
@@ -41,9 +47,7 @@
     </span>
     </el-col>
     <el-col :span="10" style="text-align: center">
-      <span style="font-weight: bolder;color: #666666;font-size:x-large;">{{
-          globalProperties.$userInfo.value.username
-        }}的草稿箱</span>
+      <span style="font-weight: bolder;color: #666666;font-size:x-large;">思量DAO已收到投送{{ total }}篇</span>
     </el-col>
     <el-col :span="6" style="text-align: right">
 
@@ -138,7 +142,7 @@ const allData = ref([]);
 const page = ref(parseInt(route.params.page || 1))
 let imgApi = 'https://source.unsplash.com/random/900x600/?desktop,wallparper'
 
-const draft = ref({
+const article = ref({
   id: '',
   authorUuid: globalProperties.$userInfo.value.id,
   topic: "",
@@ -150,7 +154,7 @@ const draft = ref({
   changeDate: new Date(),
   tag: "",
   like: [],
-  weight: 0
+  weight: 0,
 })
 
 const host = "http://astralcyber.ml:3000";
@@ -164,30 +168,42 @@ async function openEditor(id) {
     headers: myHeaders,
     redirect: "follow",
   }
-  await fetch(`${host}/draft/${id}`, requestOptions)
+  await fetch(`${host}/article/${id}`, requestOptions)
       .then(response => response.json())
       .then(data => {
         origin = data
-        draft.value = data
+        article.value = data
       })
   editorVisible.value = true
   alertSave.value = true;
 }
 
 function fenye(current) {
-  tableData.value = toRaw(allData.value).slice(current * 5 - 5, current * 5);
-  if (current !== 1) {
-    router.push({
-      name: "DraftPage",
-      params: {
-        page: current
-      }
-    })
-  } else {
-    router.push({
-      name: "Draft",
-    })
+  const host = "http://astralcyber.ml:3000";
+  const myHeaders = new Headers()
+  myHeaders.append("Content-Type", "application/json")
+  let requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
   }
+  fetch(`${host}/article/?_sort=weight&_order=desc&_page=${current}&_limit=5`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        tableData.value = data
+        if (current !== 1) {
+          router.push({
+            name: "AdminPage",
+            params: {
+              page: current
+            }
+          })
+        } else {
+          router.push({
+            name: "Admin",
+          })
+        }
+      })
   // fetch(`${host}/article/?_page=${current}&_limit=4`, requestOptions)
   //     .then(response => response.json())
   //     .then(data => {
@@ -207,22 +223,16 @@ function fenye(current) {
   //     })
 }
 
-async function getDraft() {
+async function getArticle() {
   let requestOptions = {
     method: "GET",
     headers: myHeaders,
     redirect: "follow",
   }
-  await fetch(`${host}/draft/`, requestOptions)
+  await fetch(`${host}/article/`, requestOptions)
       .then(response => response.json())
       .then(data => {
-        allData.value = []
-        for (let i in data) {
-          if (data[i].authorUuid === globalProperties.$userInfo.value.id) {
-            allData.value.push(data[i]);
-          }
-        }
-        total.value = allData.value.length;
+        total.value = data.length;
       })
   if (typeof (route.params.page) !== "undefined") {
     fenye(route.params.page);
@@ -231,36 +241,26 @@ async function getDraft() {
   }
 }
 
-function flashUser() {
-  let request = {
-    method: "PATCH",
-    headers: myHeaders,
-    redirect: "follow",
-  }
-  request.body = JSON.stringify(globalProperties.$userInfo.value);
-  fetch(`${host}/users/${globalProperties.$userInfo.value.id}`, request)
-}
-
-async function deleteDraft() {
+async function deleteArticle() {
   let requestOptions = {
     method: "DELETE",
     headers: myHeaders,
     redirect: "follow",
   }
-  const newDraft = draft.value;
-  requestOptions.body = JSON.stringify(newDraft);
-  await fetch(`${host}/draft/${draft.value.id}`, requestOptions)
+  const newArticle = article.value;
+  requestOptions.body = JSON.stringify(newArticle);
+  await fetch(`${host}/article/${article.value.id}`, requestOptions)
       .then(() => {
         ElMessage({
           message: '稿纸已被折成纸飞机～',
           type: 'success',
         })
-        globalProperties.$userInfo.value.draft--;
+        globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$allHas.value--;
         alertSave.value = false
         editorVisible.value = false
         total.value--;
         //更新数据
-        flashUser();
       })
       .catch(err => ElMessage({
         message: err,
@@ -276,136 +276,94 @@ async function deleteDraft() {
   }
   if (total.value % 5 === 0 && route.params.page === 2) {
     await router.push({
-      name: "Draft",
+      name: "Admin",
     })
   }
-  await getDraft()
+  await getArticle()
 }
 
-async function releaseArticle() {
-  if (draft.value.topic === '') {
+async function Save() {
+  if (article.value.topic === '') {
     ElMessage({
       message: '标题不能为空！',
       type: 'error',
     });
     return;
   }
-  if (draft.value.intro === '') {
-    draft.value.intro = draft.value.content.substring(0, 155)
+  if (article.value.assort === '') {
+    article.value.assort = "Default"
   }
-  let requestDelete = {
-    method: "DELETE",
+  if (article.value.intro === '') {
+    article.value.intro = article.value.content.substring(0, 155)
+  }
+  let requestOptions = {
+    method: "PATCH",
     headers: myHeaders,
     redirect: "follow",
   }
-  let requestPost = {
-    method: "Post",
-    headers: myHeaders,
-    redirect: "follow",
-  }
-  if (draft.value.id !== '') {
-    //移出草稿箱
-    const newDraft = draft.value;
-    requestDelete.body = JSON.stringify(newDraft);
-    await fetch(`${host}/draft/${draft.value.id}`, requestDelete)
-        .then(() => {
-          globalProperties.$userInfo.value.draft--;
-          total.value--;
-        })
-        .catch(err => ElMessage({
-          message: err,
-          type: 'error',
-        }))
-  }
-  //移入已发布列表
-  const newArticle = draft.value;
-  newArticle.id = ''
-  newArticle.assort = "Default"
-  newArticle.createDate = newArticle.changeDate = new Date()
-  requestPost.body = JSON.stringify(newArticle);
-  await fetch(`${host}/article`, requestPost)
+  const newArticle = article.value;
+  newArticle.changeDate = new Date()
+  requestOptions.body = JSON.stringify(newArticle);
+  await fetch(`${host}/article/${article.value.id}`, requestOptions)
       .then(() => {
-        globalProperties.$userInfo.value.articles++;
-        alertSave.value = false
-        editorVisible.value = false
         ElMessage({
-          message: "稿纸投送成功～",
+          message: '已保存修改！',
           type: 'success',
         })
       })
       .catch(err => ElMessage({
         message: err,
         type: 'error',
-      }))
-  //更新数据
-  flashUser();
-  if (total.value % 5 === 0)
-    location.replace(location.origin + '/#/draft')
-
-  await getDraft()
+      }));
+  await getArticle()
 }
 
+function buttonSave() {
+  Save()
+  alertSave.value = false;
+  editorVisible.value = false;
+}
 
-async function Save() {
-  if (draft.value.topic === '') {
+async function to(weight) {
+  if (article.value.topic === '') {
     ElMessage({
       message: '标题不能为空！',
       type: 'error',
     });
     return;
   }
-  if (draft.value.assort === '') {
-    draft.value.assort = "Default"
+  if (article.value.assort === '') {
+    article.value.assort = "Default"
   }
-  if (draft.value.intro === '') {
-    draft.value.intro = draft.value.content.substring(0, 155)
+  if (article.value.intro === '') {
+    article.value.intro = article.value.content.substring(0, 155)
   }
-  if (draft.value.id !== '') {///更新
-    let requestOptions = {
-      method: "PATCH",
-      headers: myHeaders,
-      redirect: "follow",
-    }
-    const newDraft = draft.value;
-    newDraft.changeDate = new Date()
-    requestOptions.body = JSON.stringify(newDraft);
-    await fetch(`${host}/draft/${draft.value.id}`, requestOptions)
-        .then(() => {
-          ElMessage({
-            message: '已保存到草稿箱！',
-            type: 'success',
-          })
+  let requestOptions = {
+    method: "PATCH",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  const newArticle = article.value;
+  newArticle.weight = weight;
+  requestOptions.body = JSON.stringify(newArticle);
+  await fetch(`${host}/article/${article.value.id}`, requestOptions)
+      .then(() => {
+        ElMessage({
+          message: weight===0?'已取消置顶～':'已置顶～',
+          type: weight===0?'warning':'success',
         })
-        .catch(err => alert(err));
-  } else {//创建
-    let requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      redirect: "follow",
-    }
-    const newDraft = draft.value;
-    newDraft.createDate = newDraft.changeDate = new Date()
-    requestOptions.body = JSON.stringify(newDraft);
-    await fetch(`${host}/draft/`, requestOptions)
-        .then(() => {
-          ElMessage({
-            message: '已保存到草稿箱！',
-            type: 'success',
-          });
-          globalProperties.$userInfo.value.draft++
-          total.value++
-          flashUser()
-        })
-        .catch(err => ElMessage({
-          message: err,
-          type: 'error',
-        }));
-  }
-  await getDraft()
+      })
+      .catch(err => ElMessage({
+        message: err,
+        type: 'error',
+      }));
+  await getArticle()
+  alertSave.value = false;
+  editorVisible.value = false;
 }
 
 function closeEditor() {
-  if ((draft.value.content !== '' || draft.value.topic !== '') && alertSave.value) {
+  if ((article.value.content !== '' || article.value.topic !== '') && alertSave.value) {
     ElMessageBox.confirm(
         '内容未保存，' + globalProperties.$userInfo.value.username + '真的要走吗？',
         'Warning',
@@ -431,7 +389,7 @@ function back() {
 }
 
 onBeforeMount(() => {
-  getDraft();
+  getArticle();
 })
 
 function articleImg(id) {

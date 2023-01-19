@@ -83,6 +83,7 @@ VMdPreview.use(createTodoListPlugin());
 
 const app = createApp(App)
 
+app.config.globalProperties.$allHas = ref()
 app.config.globalProperties.$reload = ref(true)
 app.config.globalProperties.$station = ref(false)
 app.config.globalProperties.$userInfo = ref({

@@ -38,6 +38,16 @@ const router = createRouter({
             name: 'Draft',
             component: () => import('../views/DraftView.vue')
         },
+        {
+            path: '/admin',
+            name: 'Admin',
+            component: () => import('../views/AdminView.vue')
+        },
+        {
+            path: '/admin/:page',
+            name: 'AdminPage',
+            component: () => import('../views/AdminView.vue')
+        },
     ]
 })
 
