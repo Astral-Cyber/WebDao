@@ -15,7 +15,7 @@
         <el-card class="articleCard">
           <el-row>
             <el-col :span="10" class="articleImgBox">
-              <img :src="articleImg(article.id)" class="articleImg">
+              <img :src="articleImg(article.topic)" class="articleImg">
             </el-col>
             <el-col :span="14" style="padding: 10px 15px 15px 15px">
               <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
@@ -28,11 +28,12 @@
                       margin: 0;
                       height: 30px;
                       line-height: 30px;
-                      word-wrap:break-word">{{ article.topic }}</h1>
+                      word-wrap:break-word">{{ article.topic }}
+              </h1>
               <div style="height: 150px;width: auto;">
                         <span class="introCard"
-                        >{{article.intro}}</span>
-              <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
+                        >{{ article.intro }}</span>
+                <span style="color: #777777;font-size: small;bottom: 10px;position: absolute;width: 55%">
                         <el-row>
                           <el-col :span="12">
                            <el-icon style="top: 2px">
@@ -84,7 +85,7 @@ const route = useRoute()
 const total = ref('')
 const tableData = ref('')
 const page = ref(parseInt(route.params.page || 1))
-let imgApi = 'https://api.ixiaowai.cn/gqapi/gqapi.php'
+let imgApi = 'https://source.unsplash.com/random/900x600/?desktop,wallparper'
 
 function fenye(current) {
   const host = "http://astralcyber.ml:3000";
@@ -148,7 +149,7 @@ function articleImg(id) {
   //       url = res.data.urls.full;
   //     }.bind(this));
   // return url;
-  return imgApi + '?' + id + ')';
+  return imgApi + ',' + id + ')';
 }
 
 </script>
@@ -182,7 +183,7 @@ pagination {
 }
 
 .articleImgBox {
-  height: auto;
+  height: 205px;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;

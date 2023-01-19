@@ -68,40 +68,50 @@
     <el-tabs v-model="activeName" class="tabs" :before-leave="tabLeave">
       <el-tab-pane class="ele" label="HOME" name="first">
         <el-avatar id="photo"
-                   :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"
+                   :src="globalProperties.$userInfo.value.qq===''?'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image':`http://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
         />
         <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
         <div style="margin-bottom: 6px"><span id="name">Hi, {{ globalProperties.$userInfo.value.username }}</span></div>
         <el-row justify="center" style="height: 42px" align="middle">
-          <span id="intro" v-text="globalProperties.$userInfo.value.intro===''?yan:globalProperties.$userInfo.value.intro"></span>
+          <span id="intro"
+                v-text="globalProperties.$userInfo.value.intro===''?yan:globalProperties.$userInfo.value.intro"></span>
         </el-row>
-        <el-row justify="center" align="middle" class="userLine">
-          <el-button @click="router.push({
+        <el-row justify="center" align="middle" style="height: 42px;margin-top: 10px;">
+
+          <el-badge style="" :value="globalProperties.$userInfo.value.articles" type="primary">
+            <el-button @click="router.push({
              name:'Author'
-          })" style="font-size: 1.3vw" type="success" link>已投送: {{ globalProperties.$userInfo.value.articles }}
-          </el-button>
-
+          })" style="font-size: 1.3vw" type="primary" link>已投送
+            </el-button>
+          </el-badge>
+          &nbsp;
           <el-divider direction="vertical" border-style="dashed"/>
-
-          <el-button @click="router.push({
+          &nbsp;
+          <el-badge style="" :value="globalProperties.$userInfo.value.draft" type="warning">
+            <el-button @click="router.push({
              name:'Draft'
-          })" style="font-size: 1.3vw" type="warning" link>草稿箱: {{ globalProperties.$userInfo.value.draft }}
-          </el-button>
+          })" style="font-size: 1.3vw" type="warning" link>草稿箱
+            </el-button>
+          </el-badge>
         </el-row>
         <el-row justify="center" align="middle" class="userLine">
           <a :href="globalProperties.$userInfo.value.qq!=='' ? 'https://api.liitk.com/s/qrcode/api?text='+globalProperties.$userInfo.value.qq+'&size=300px':''">
             <img class="social" src="https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/QQ-circle-fill.svg"/>
           </a>
           &#12288;
+          &nbsp;
           <a :href="globalProperties.$userInfo.value.music">
             <img class="social" src="https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/%E5%94%B1%E7%89%87.svg"/>
           </a>
           &#12288;
+          &nbsp;
           <a :href="globalProperties.$userInfo.value.github">
             <img href="www.baidu.com" class="social"
                  src="https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/github-fill.svg"/>
           </a>
           &#12288;
+          &nbsp;
+
           <a :href="globalProperties.$userInfo.value.telegram">
             <img class="social"
                  src="https://cdn.jsdelivr.net/gh/Astral-Cyber/PicImg/blog/%E5%93%81%E7%89%8C%E6%A0%87%E8%AF%86_telegram.svg"/>
@@ -117,7 +127,7 @@
 
       <el-tab-pane class="ele" label="ABOUT" name="second">
         <el-avatar id="photo"
-                   :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"
+                   :src="globalProperties.$userInfo.value.qq===''?'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image':`http://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
         />
         <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
 
@@ -127,27 +137,27 @@
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
-          <el-input v-model="globalProperties.$userInfo.value.intro" clearable>
+          <el-input v-model="globalProperties.$userInfo.value.intro" clearable placeholder="不填则随机一言">
             <template style="width: min-content" #prepend>个签</template>
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
-          <el-input v-model="globalProperties.$userInfo.value.qq" clearable>
+          <el-input v-model="globalProperties.$userInfo.value.qq" clearable placeholder="填写QQ号将获取头像">
             <template style="width: min-content" #prepend>QQ</template>
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
-          <el-input v-model="globalProperties.$userInfo.value.music" clearable>
+          <el-input v-model="globalProperties.$userInfo.value.music" clearable placeholder="主页链接">
             <template style="width: min-content" #prepend>Music</template>
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
-          <el-input v-model="globalProperties.$userInfo.value.github" clearable>
+          <el-input v-model="globalProperties.$userInfo.value.github" clearable placeholder="主页链接">
             <template style="width: min-content" #prepend>Github</template>
           </el-input>
         </el-row>
         <el-row justify="center" align="middle" class="about">
-          <el-input v-model="globalProperties.$userInfo.value.telegram" clearable>
+          <el-input v-model="globalProperties.$userInfo.value.telegram" clearable placeholder="主页链接">
             <template style="width: min-content" #prepend>Telegram</template>
           </el-input>
         </el-row>
@@ -506,7 +516,7 @@ function changePassword() {
 }
 
 onBeforeMount(() => {
-  fetch('https://v1.hitokoto.cn/?c=j&c=e&c=e&c=f&min_length=17')
+  fetch('https://v1.hitokoto.cn/?c=j&c=e&c=i&c=k&max_length=20')
       .then(response => response.json())
       .then(data => {
         yan.value = data.hitokoto;
@@ -556,9 +566,9 @@ onBeforeMount(() => {
 }
 
 .userLine {
-  height: 37px;
-  max-height: 37px;
-  margin-bottom: 8px;
+  height: 30px;
+  max-height: 30px;
+  margin-bottom: 6px;
 }
 
 .about {

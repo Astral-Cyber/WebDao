@@ -14,7 +14,7 @@ const host = 'http://astralcyber.ml:3000'
 const yan = ref('')
 
 onBeforeMount(() => {
-  fetch('https://v1.hitokoto.cn/?c=j&c=e&c=e&c=f&min_length=17')
+  fetch('https://v1.hitokoto.cn/?c=j&c=e&c=i&c=k&min_length=17')
       .then(response => response.json())
       .then(data => {
         yan.value = data.hitokoto;

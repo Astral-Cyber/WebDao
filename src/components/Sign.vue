@@ -31,11 +31,11 @@ function register() {
     password: md5(password.value),
     articles: 0,
     draft: 0,
-    qq: "QQ号",
-    music: "平台主页",
-    github: "主页链接",
-    telegram: "主页链接",
-    intro: "来如风雨，去似微尘",
+    qq: "",
+    music: "",
+    github: "",
+    telegram: "",
+    intro: "",
   });
   if (repeatPassword.value !== password.value) {
     ElMessage({

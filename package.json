@@ -10,10 +10,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
-    "@kangc/v-md-editor": "^2.3.15",
+    "@kangc/v-md-editor": "^2.1.7",
+    "animejs": "^3.2.1",
     "element-plus": "^2.2.28",
+    "highlight.js": "^11.7.0",
     "js-md5": "^0.7.3",
-    "markdown-it-kbd": "^2.2.2",
     "prismjs": "^1.29.0",
     "sakana-widget": "^2.4.3",
     "vue": "^3.2.41",

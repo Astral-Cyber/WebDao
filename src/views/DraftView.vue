@@ -59,7 +59,7 @@
         <el-card class="articleCard">
           <el-row>
             <el-col :span="10" class="articleImgBox">
-              <img :src="articleImg(article.id)" class="articleImg">
+              <img :src="articleImg(article.topic)" class="articleImg">
             </el-col>
             <el-col :span="14" style="padding: 10px 15px 15px 15px">
               <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
@@ -136,7 +136,7 @@ const total = ref()
 const tableData = ref([]);
 const allData = ref([]);
 const page = ref(parseInt(route.params.page || 1))
-let imgApi = 'https://api.ixiaowai.cn/gqapi/gqapi.php'
+let imgApi = 'https://source.unsplash.com/random/900x600/?desktop,wallparper'
 
 const draft = ref({
   id: '',
@@ -441,7 +441,7 @@ function articleImg(id) {
   //       url = res.data.urls.full;
   //     }.bind(this));
   // return url;
-  return imgApi + '?' + id + ')';
+  return imgApi  + ',' + id + ')';
 }
 
 </script>
@@ -482,7 +482,7 @@ pagination {
 }
 
 .articleImgBox {
-  height: auto;
+  height: 205px;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;

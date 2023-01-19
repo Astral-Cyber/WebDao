@@ -40,7 +40,10 @@
       "author": "作者",
       "createDate": "发布时间",
       "changeDate": "修改时间",
-      "like": 0
+      "like": {
+        "astral": false,
+        "xxx": true
+      }
     },
     {
       "id": 1,

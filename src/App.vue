@@ -14,8 +14,13 @@
         <el-aside class="side" width="30vw">
           <PersonInfo v-if="globalProperties.$station.value"/>
           <LoginCard v-if="!globalProperties.$station.value"/>
-          <el-backtop :right="37" :bottom="150">
-            <div style="
+          <BlogInfo :key="globalProperties.$reload.value"/>
+
+        </el-aside>
+      </el-container>
+    </el-main>
+    <el-backtop :right="37" :bottom="150">
+      <div style="
                   height: 100%;
                   width: 100%;
                   border-radius: 40px;
@@ -24,12 +29,9 @@
                   text-align: center;
                   line-height: 40px;
                   color: #FFE6D6;">
-              ⬆
-            </div>
-          </el-backtop>
-        </el-aside>
-      </el-container>
-    </el-main>
+        ⬆
+      </div>
+    </el-backtop>
   </el-container>
 </template>
 
@@ -40,6 +42,7 @@ import PersonInfo from "./components/PersonInfo.vue";
 import LoginCard from "./components/LoginCard.vue";
 import useGetGlobalProperties from "./hook/useGlobal.js";
 import {ElMessage} from "element-plus";
+import BlogInfo from "./components/BlogInfo.vue";
 
 const globalProperties = useGetGlobalProperties()
 const id = ref('')
