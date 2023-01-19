@@ -63,7 +63,7 @@ VMdEditor.use(createLineNumbertPlugin());
 VMdEditor.use(createTodoListPlugin());
 
 
-new SakanaWidget({autoFit: true, controls: false}).setState({i:0.002}).mount('#sakana-widget');
+new SakanaWidget({autoFit: true, controls: false}).setState({i: 0.002}).mount('#sakana-widget');
 
 VMdPreview.use(githubTheme, {
     //Prism,
@@ -76,10 +76,10 @@ VMdPreview.use(createLineNumbertPlugin());
 VMdPreview.use(createTodoListPlugin());
 
 
-
 const app = createApp(App)
 
-app.config.globalProperties.$allHas = ref()
+app.config.globalProperties.$avator = ref('')
+app.config.globalProperties.$allHas = ref(0)
 app.config.globalProperties.$reload = ref(true)
 app.config.globalProperties.$station = ref(false)
 app.config.globalProperties.$userInfo = ref({

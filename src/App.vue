@@ -4,7 +4,7 @@
       <el-container>
         <!--主页左侧-->
         <el-aside class="side" width="8vw">
-<!--          <el-button @click="test"></el-button>-->
+
         </el-aside>
         <!--主页中心-->
         <el-main id="articleBody">
@@ -50,6 +50,8 @@ const id = ref('')
 const route = useRoute();
 const router = useRouter();
 const host = 'http://astralcyber.ml:3000'
+const myHeaders = new Headers()
+myHeaders.append("Content-Type", "application/json")
 
 function test() {
   let pattern = /"(Main)+|(Page)+"/
@@ -57,15 +59,20 @@ function test() {
 }
 
 onBeforeMount(() => {
+  let requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  fetch('http://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=json', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        globalProperties.$avator.value = data.imgurl;
+        console.log(globalProperties.$avator.value)
+      })
+  globalProperties.$allHas.value=localStorage.getItem('allHas')
   if (localStorage.getItem("id") !== null) {
     globalProperties.$station.value = true;
-    const myHeaders = new Headers()
-    myHeaders.append("Content-Type", "application/json")
-    let requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    }
     fetch(`${host}/users/${localStorage.getItem("id")}`, requestOptions)
         .then(response => response.json())
         .then(data => {
@@ -77,12 +84,12 @@ onBeforeMount(() => {
           type: 'error',
           // 赋默认值
         }))
-  }else {
-      ElMessage({
-        message: '未登录账号',
-        type: 'info',
-        // 赋默认值
-      })
+  } else {
+    ElMessage({
+      message: '未登录账号',
+      type: 'info',
+      // 赋默认值
+    })
   }
 })
 

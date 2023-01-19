@@ -61,7 +61,7 @@ function login() {
 
 <template>
   <el-avatar id="photo"
-             :src="'https://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=image'"/>
+             :src="globalProperties.$avator.value"/>
   <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
   <el-row>
     <el-input v-model="user" placeholder="用户名" clearable/>
