@@ -13,13 +13,11 @@ import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
 //Vuepress
-import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 
 
 // highlightjs
 import hljs from 'highlight.js';
-import Prism from 'prismjs';
 
 //markdown-it插件
 import createLineNumbertPlugin from '@kangc/v-md-editor/lib/plugins/line-number/index';
@@ -47,6 +45,11 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 // style
 import 'codemirror/lib/codemirror.css';
+import VMdPreview from '@kangc/v-md-editor/lib/preview';
+import '@kangc/v-md-editor/lib/style/preview.css';
+
+import 'sakana-widget/lib/index.css';
+import SakanaWidget from 'sakana-widget';
 
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
@@ -58,13 +61,6 @@ VMdEditor.use(githubTheme, {
 });
 VMdEditor.use(createLineNumbertPlugin());
 VMdEditor.use(createTodoListPlugin());
-
-import VMdPreview from '@kangc/v-md-editor/lib/preview';
-import '@kangc/v-md-editor/lib/style/preview.css';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-
-import 'sakana-widget/lib/index.css';
-import SakanaWidget from 'sakana-widget';
 
 
 new SakanaWidget({autoFit: true, controls: false}).setState({i:0.002}).mount('#sakana-widget');

@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onBeforeUpdate, provide, ref} from "vue";
+import {onBeforeMount, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import PersonInfo from "./components/PersonInfo.vue";
 import LoginCard from "./components/LoginCard.vue";

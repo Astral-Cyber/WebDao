@@ -77,8 +77,8 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUpdate, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {onBeforeMount, ref} from "vue";
+import {useRoute} from "vue-router";
 import router from "../router/index.js";
 import DateFormat from "../hook/Date";
 import useGetGlobalProperties from "../hook/useGlobal.js";

@@ -62,8 +62,8 @@
 </template>
 
 <script setup>
-import {onBeforeMount, ref, toRaw} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {onBeforeMount, ref} from "vue";
+import {useRouter} from "vue-router";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 
 const tableData = ref('');
@@ -86,7 +86,7 @@ function getHot() {
     headers: myHeaders,
     redirect: "follow",
   }
-  fetch(`${host}/article?_sort=like&_order=desc&_page=1&_limit=5`, requestOptions)
+  fetch(`${host}/article?_sort=like.length&_order=desc&_page=1&_limit=5`, requestOptions)
       .then(response => response.json())
       .then(data => {
         tableData.value = data

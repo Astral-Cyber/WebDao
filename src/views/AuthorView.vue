@@ -121,8 +121,8 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUpdate, ref, toRaw} from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {onBeforeMount, ref, toRaw} from "vue";
+import {useRoute} from "vue-router";
 import router from "../router/index.js";
 import useGetGlobalProperties from "../hook/useGlobal.js";
 import {ElMessage, ElMessageBox} from "element-plus";

@@ -44,7 +44,6 @@ import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount, ref} from "vue";
 import {ElMessage} from "element-plus";
 import useGetGlobalProperties from "../hook/useGlobal.js";
-import DateFormat from "../hook/Date.js";
 
 
 const globalProperties = useGetGlobalProperties()
