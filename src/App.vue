@@ -57,7 +57,6 @@ function test() {
 }
 
 onBeforeMount(() => {
-  globalProperties.$allHas.value = localStorage.getItem('allHas')
   if (localStorage.getItem("id") !== null) {
     globalProperties.$station.value = true;
     const myHeaders = new Headers()

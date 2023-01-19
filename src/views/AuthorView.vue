@@ -188,6 +188,17 @@ function fenye(current) {
       name: "Author",
     })
   }
+  let timer;
+  cancelAnimationFrame(timer);
+  timer = requestAnimationFrame(function fn(){
+    let toTop = document.body.scrollTop || document.documentElement.scrollTop;
+    if(toTop > 0){
+      scrollTo(0,toTop-25);
+      timer = requestAnimationFrame(fn);
+    }else{
+      cancelAnimationFrame(timer);
+    }
+  });
   // fetch(`${host}/article/?_page=${current}&_limit=4`, requestOptions)
   //     .then(response => response.json())
   //     .then(data => {

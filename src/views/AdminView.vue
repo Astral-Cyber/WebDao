@@ -204,6 +204,17 @@ function fenye(current) {
           })
         }
       })
+  let timer;
+  cancelAnimationFrame(timer);
+  timer = requestAnimationFrame(function fn() {
+    let toTop = document.body.scrollTop || document.documentElement.scrollTop;
+    if (toTop > 0) {
+      scrollTo(0, toTop - 25);
+      timer = requestAnimationFrame(fn);
+    } else {
+      cancelAnimationFrame(timer);
+    }
+  });
   // fetch(`${host}/article/?_page=${current}&_limit=4`, requestOptions)
   //     .then(response => response.json())
   //     .then(data => {
@@ -233,12 +244,44 @@ async function getArticle() {
       .then(response => response.json())
       .then(data => {
         total.value = data.length;
+      }).catch(err => {
+        ElMessage({
+          message: err,
+          type: 'error',
+        })
       })
   if (typeof (route.params.page) !== "undefined") {
     fenye(route.params.page);
   } else {
     fenye(1);
   }
+}
+
+async function flashUser(id) {
+  let author;
+  await fetch(`${host}/users/${id}`, {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  }).then(response => response.json())
+      .then(data => {
+        author = data;
+      }).catch(err => {
+    ElMessage({
+      message: err,
+      type: 'error',
+    })
+  })
+
+
+  let request = {
+    method: "PATCH",
+    headers: myHeaders,
+    redirect: "follow",
+  }
+  author.articles--;
+  request.body = JSON.stringify(author);
+  await fetch(`${host}/users/${author.id}`, request)
 }
 
 async function deleteArticle() {
@@ -261,6 +304,7 @@ async function deleteArticle() {
         editorVisible.value = false
         total.value--;
         //更新数据
+        flashUser(article.value.authorUuid)
       })
       .catch(err => ElMessage({
         message: err,
@@ -349,8 +393,8 @@ async function to(weight) {
   await fetch(`${host}/article/${article.value.id}`, requestOptions)
       .then(() => {
         ElMessage({
-          message: weight===0?'已取消置顶～':'已置顶～',
-          type: weight===0?'warning':'success',
+          message: weight === 0 ? '已取消置顶～' : '已置顶～',
+          type: weight === 0 ? 'warning' : 'success',
         })
       })
       .catch(err => ElMessage({

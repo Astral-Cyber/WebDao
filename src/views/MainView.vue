@@ -116,6 +116,17 @@ function fenye(current) {
           })
         }
       })
+  let timer;
+  cancelAnimationFrame(timer);
+  timer = requestAnimationFrame(function fn(){
+    let toTop = document.body.scrollTop || document.documentElement.scrollTop;
+    if(toTop > 0){
+      scrollTo(0,toTop-25);
+      timer = requestAnimationFrame(fn);
+    }else{
+      cancelAnimationFrame(timer);
+    }
+  });
 }
 
 function getArticles() {

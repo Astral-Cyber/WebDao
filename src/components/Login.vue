@@ -55,6 +55,7 @@ function login() {
         type: 'error',
         // 赋默认值
       }))
+  globalProperties.$allHas.value = localStorage.getItem('allHas')
 }
 </script>
 
