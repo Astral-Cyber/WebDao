@@ -14,7 +14,7 @@
         <el-aside class="side" width="30vw">
           <PersonInfo v-if="globalProperties.$station.value"/>
           <LoginCard v-if="!globalProperties.$station.value"/>
-          <BlogInfo :key="globalProperties.$reload.value"/>
+          <BlogInfo :key="globalProperties.$reloadHot.value"/>
 
         </el-aside>
       </el-container>

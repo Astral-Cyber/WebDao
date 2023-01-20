@@ -150,7 +150,7 @@ function starFunc() {
   starStation.value = !starStation.value
   setTimeout(function () {
     DOM.blur();
-    globalProperties.$reload.value = !globalProperties.$reload.value;
+    globalProperties.$reloadHot.value = !globalProperties.$reloadHot.value;
     //   DOM.style.color = '';
     // DOM.style.setProperty('--starColor', '#3F9EFF');
   }, 500)

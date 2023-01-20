@@ -66,7 +66,7 @@
               <img :src="articleImg(article.topic)" class="articleImg">
             </el-col>
             <el-col :span="14" style="padding: 10px 15px 15px 15px">
-              <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
+              <h1 v-if="article.weight===0" style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
                       word-break:break-all;
                       overflow: hidden;
                       text-overflow: ellipsis;
@@ -76,7 +76,22 @@
                       margin: 0;
                       height: 30px;
                       line-height: 30px;
-                      word-wrap:break-word">{{ article.topic }}</h1>
+                      word-wrap:break-word">{{ article.topic }}
+              </h1>
+              <!--              置顶-->
+              <h1 v-if="article.weight!==0" style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
+                      word-break:break-all;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 1;
+                      -webkit-box-orient: vertical;
+                      margin: 0;
+                      height: 30px;
+                      line-height: 30px;
+                      word-wrap:break-word"><span style="color: #F46B6B">「置顶」</span>{{ article.topic }}
+              </h1>
+
               <div style="height: 150px;width: auto;">
                         <span class="introCard"
                         >{{ article.intro }}</span>
@@ -267,11 +282,11 @@ async function flashUser(id) {
       .then(data => {
         author = data;
       }).catch(err => {
-    ElMessage({
-      message: err,
-      type: 'error',
-    })
-  })
+        ElMessage({
+          message: err,
+          type: 'error',
+        })
+      })
 
 
   let request = {
@@ -299,6 +314,7 @@ async function deleteArticle() {
           type: 'success',
         })
         globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$reloadHot.value=!globalProperties.$reloadHot.value;
         globalProperties.$allHas.value--;
         alertSave.value = false
         editorVisible.value = false

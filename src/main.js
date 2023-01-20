@@ -80,6 +80,7 @@ const app = createApp(App)
 
 app.config.globalProperties.$avator = ref('')
 app.config.globalProperties.$allHas = ref(0)
+app.config.globalProperties.$reloadHot = ref(true)
 app.config.globalProperties.$reload = ref(true)
 app.config.globalProperties.$station = ref(false)
 app.config.globalProperties.$userInfo = ref({

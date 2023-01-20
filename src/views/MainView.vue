@@ -18,7 +18,7 @@
               <img :src="articleImg(article.topic)" class="articleImg">
             </el-col>
             <el-col :span="14" style="padding: 10px 15px 15px 15px">
-              <h1 style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
+              <h1 v-if="article.weight===0" style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
                       word-break:break-all;
                       overflow: hidden;
                       text-overflow: ellipsis;
@@ -30,6 +30,20 @@
                       line-height: 30px;
                       word-wrap:break-word">{{ article.topic }}
               </h1>
+<!--              置顶-->
+              <h1 v-if="article.weight!==0" style="top: 0; color: #666666;font-weight: bolder;font-size: 24px;
+                      word-break:break-all;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 1;
+                      -webkit-box-orient: vertical;
+                      margin: 0;
+                      height: 30px;
+                      line-height: 30px;
+                      word-wrap:break-word"><span style="color: #F46B6B">「置顶」</span>{{ article.topic }}
+              </h1>
+
               <div style="height: 150px;width: auto;">
                         <span class="introCard"
                         >{{ article.intro }}</span>
@@ -118,12 +132,12 @@ function fenye(current) {
       })
   let timer;
   cancelAnimationFrame(timer);
-  timer = requestAnimationFrame(function fn(){
+  timer = requestAnimationFrame(function fn() {
     let toTop = document.body.scrollTop || document.documentElement.scrollTop;
-    if(toTop > 0){
-      scrollTo(0,toTop-25);
+    if (toTop > 0) {
+      scrollTo(0, toTop - 25);
       timer = requestAnimationFrame(fn);
-    }else{
+    } else {
       cancelAnimationFrame(timer);
     }
   });
@@ -142,7 +156,7 @@ function getArticles() {
       .then(response => response.json())
       .then(data => {
         total.value = data.length;
-        localStorage.setItem('allHas',total.value);
+        localStorage.setItem('allHas', total.value);
       })
 }
 

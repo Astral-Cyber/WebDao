@@ -258,6 +258,7 @@ async function releaseArticle() {
   await fetch(`${host}/article`, requestPost)
       .then(() => {
         globalProperties.$reload.value = !globalProperties.$reload.value;
+        globalProperties.$reloadHot.value=!globalProperties.$reloadHot.value;
         if (globalProperties.$userInfo.value.id !== 'admin')
           globalProperties.$userInfo.value.articles++;
         else
