@@ -168,7 +168,7 @@ const article = ref({
   weight: 0,
 })
 
-const host = "http://astralcyber.ml:3000";
+const host = "http://astralcyber.top:3000";
 const myHeaders = new Headers()
 myHeaders.append("Content-Type", "application/json")
 

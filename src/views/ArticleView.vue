@@ -63,7 +63,7 @@ const article = ref({
   like: [],
   weight: 0,
 })
-const host = 'http://astralcyber.ml:3000'
+const host = 'http://astralcyber.top:3000'
 let index = -1;
 
 const myHeaders = new Headers()
