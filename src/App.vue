@@ -64,10 +64,10 @@ onBeforeMount(() => {
     headers: myHeaders,
     redirect: "follow",
   }
-  fetch('http://api.uomg.com/api/rand.avatar?sort=%E5%8A%A8%E6%BC%AB%E5%A5%B3&format=json', requestOptions)
+  fetch('http://api.uomg.com/api/rand.avatar?sort=动漫女&format=json', requestOptions)
       .then(response => response.json())
       .then(data => {
-        globalProperties.$avator.value = data.imgurl;
+        globalProperties.$avator.value = "https://t.mwm.moe/tx";
         console.log(globalProperties.$avator.value)
       })
   globalProperties.$allHas.value=localStorage.getItem('allHas')
