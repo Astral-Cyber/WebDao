@@ -64,7 +64,7 @@ onBeforeMount(() => {
     headers: myHeaders,
     redirect: "follow",
   }
-  fetch('http://api.uomg.com/api/rand.avatar?sort=动漫女&format=json', requestOptions)
+  fetch('https://api.uomg.com/api/rand.avatar?sort=动漫女&format=json', requestOptions)
       .then(response => response.json())
       .then(data => {
         globalProperties.$avator.value = "https://t.mwm.moe/tx";

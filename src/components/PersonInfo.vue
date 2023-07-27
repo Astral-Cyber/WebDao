@@ -68,7 +68,7 @@
     <el-tabs v-model="activeName" class="tabs" :before-leave="tabLeave">
       <el-tab-pane class="ele" label="HOME" name="first">
         <el-avatar id="photo"
-                   :src="globalProperties.$userInfo.value.qq===''?globalProperties.$avator.value:`http://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
+                   :src="globalProperties.$userInfo.value.qq===''?globalProperties.$avator.value:`https://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
         />
         <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
         <div style="margin-bottom: 6px"><span id="name">Hi, {{ globalProperties.$userInfo.value.username }}</span></div>
@@ -136,7 +136,7 @@
 
       <el-tab-pane class="ele" label="ABOUT" name="second">
         <el-avatar id="photo"
-                   :src="globalProperties.$userInfo.value.qq===''?globalProperties.$avator.value:`http://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
+                   :src="globalProperties.$userInfo.value.qq===''?globalProperties.$avator.value:`https://q2.qlogo.cn/headimg_dl?dst_uin=${globalProperties.$userInfo.value.qq}&spec=100`"
         />
         <el-divider style="margin-top: 45%; margin-bottom: 12px" border-style="dashed" content-position="left"/>
 
