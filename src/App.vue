@@ -87,8 +87,7 @@ onBeforeMount(() => {
   } else {
     ElMessage({
       message: '未登录账号',
-      type: 'info',
-      // 赋默认值
+      type: 'info', // 赋默认值
     })
   }
 })
