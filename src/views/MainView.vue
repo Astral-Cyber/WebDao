@@ -105,7 +105,7 @@ const page = ref(parseInt(route.params.page || 1))
 let imgApi = 'https://source.unsplash.com/random/900x600/?desktop,wallparper'
 
 function fenye(current) {
-  const host = "http://astralcyber.top:3000";
+  const host = "https://server.astralcyber.top";
   const myHeaders = new Headers()
   myHeaders.append("Content-Type", "application/json")
   let requestOptions = {
@@ -144,7 +144,7 @@ function fenye(current) {
 }
 
 function getArticles() {
-  const host = "http://astralcyber.top:3000";
+  const host = "https://server.astralcyber.top";
   const myHeaders = new Headers()
   myHeaders.append("Content-Type", "application/json")
   let requestOptions = {

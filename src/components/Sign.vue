@@ -9,7 +9,7 @@ const user = ref('')
 const name = ref('')
 const password = ref('')
 const repeatPassword = ref('')
-const host = 'http://astralcyber.top:3000'
+const host = 'https://server.astralcyber.top'
 
 function register() {
   if (user.value === '' || name.value === '' || password.value === '' || repeatPassword.value === '') {

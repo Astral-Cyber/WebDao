@@ -143,7 +143,7 @@ const draft = ref({
   weight: 0
 })
 
-const host = "http://astralcyber.top:3000";
+const host = "https://server.astralcyber.top";
 const myHeaders = new Headers()
 myHeaders.append("Content-Type", "application/json")
 
